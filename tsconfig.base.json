@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@fullstack/constants": ["libs/constants/src/index.ts"],
+      "@fullstack/interfaces": ["libs/interfaces/src/index.ts"],
+      "@fullstack/types": ["libs/types/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
