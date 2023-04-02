@@ -17,7 +17,7 @@ import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 import { Role } from '@fullstack/types';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { Roles } from '../roles.decorator';
+import { Roles } from '../auth/roles/roles.decorator';
 import { UsersService } from './users.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 

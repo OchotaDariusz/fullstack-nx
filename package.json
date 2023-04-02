@@ -2,7 +2,11 @@
   "name": "fullstack",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "backend:start": "nx run backend:serve",
+    "backend:build": "nx run backend:build",
+    "backend:e2e": "nx run backend-e2e:e2e --skip-nx-cloud"
+  },
   "private": true,
   "dependencies": {
     "@nestjs/common": "^9.0.0",

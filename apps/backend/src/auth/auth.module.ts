@@ -11,7 +11,7 @@ import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
-import { RolesGuard } from '../roles.guard';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [

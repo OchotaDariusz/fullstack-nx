@@ -14,8 +14,8 @@ import { Role } from '@fullstack/types';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { CreateUserDto } from '../users/dto/create-user.dto';
-import { Roles } from '../roles.decorator';
-import { JwtAuthGuard } from "./guards/jwt-auth.guard";
+import { Roles } from './roles/roles.decorator';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @ApiTags('auth')
 @ApiSecurity('bearer')

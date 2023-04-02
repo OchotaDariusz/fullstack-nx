@@ -9,7 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 
 import { Role } from '@fullstack/types';
 import { jwtConstants, ROLES_KEY } from '@fullstack/constants';
-import { JwtStrategy } from './auth/strategies/jwt.strategy';
+import { JwtStrategy } from '../strategies/jwt.strategy';
 
 @Injectable()
 export class RolesGuard implements CanActivate {

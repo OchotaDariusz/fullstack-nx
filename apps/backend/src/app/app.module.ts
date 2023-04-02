@@ -7,7 +7,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from '../auth/auth.module';
 import entities from '../entities';
-import { RolesGuard } from '../roles.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
 import { UsersModule } from '../users/users.module';
 
 @Module({
