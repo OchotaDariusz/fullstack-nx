@@ -10,6 +10,7 @@ import {
 } from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 
+import { User } from '@fullstack/interfaces';
 import { Role } from '@fullstack/types';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -40,6 +41,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   @Roles(Role.ADMIN, Role.USER)
   getCurrentUser(@Request() req) {
-    return req.user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...user } = req.user;
+    return user as User;
   }
 }
