@@ -17,7 +17,8 @@
     "paths": {
       "@fullstack/constants": ["libs/constants/src/index.ts"],
       "@fullstack/interfaces": ["libs/interfaces/src/index.ts"],
-      "@fullstack/types": ["libs/types/src/index.ts"]
+      "@fullstack/types": ["libs/types/src/index.ts"],
+      "@fullstack/ui": ["libs/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
