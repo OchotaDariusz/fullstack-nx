@@ -1,6 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './main-content.module.scss';
-
 /* eslint-disable-next-line */
 export interface MainContentProps {}
 

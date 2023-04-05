@@ -12,9 +12,6 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './register-form.module.scss';
-
 /* eslint-disable-next-line */
 export interface RegisterFormProps {}
 
@@ -29,7 +26,7 @@ export function RegisterForm(props: RegisterFormProps) {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="div" maxWidth="xs">
       <CssBaseline />
       <Box
         sx={{
