@@ -13,7 +13,7 @@ export function ContentWrapper({ children }: ContentWrapperProps) {
   const isLoggedIn = false;
 
   return (
-    <Container component={'main'} sx={{ textAlign: 'center' }}>
+    <Container component={'main'} sx={{ justifyContent: 'center' }}>
       {!isLoggedIn && <SignForm />}
       {isLoggedIn && children}
     </Container>
