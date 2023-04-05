@@ -1,6 +1,7 @@
 import { Route, Routes, Link } from 'react-router-dom';
+import ReactDOM from 'react-dom';
 
-import { NavigationDrawer } from '@fullstack/ui';
+import { ContentWrapper, MainContent, NavigationDrawer } from '@fullstack/ui';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -13,10 +14,13 @@ import styles from './app.module.scss';
 export function App() {
   return (
     <>
-      <NavigationDrawer />
-      {/*<ContentWrapper>*/}
-      {/*  <MainContent />*/}
-      {/*</ContentWrapper>*/}
+      {ReactDOM.createPortal(
+        <NavigationDrawer />,
+        document.getElementById('navbar') as HTMLElement
+      )}
+      <ContentWrapper>
+        <MainContent />
+      </ContentWrapper>
       <div />
 
       {/* START: routes */}

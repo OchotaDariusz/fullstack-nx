@@ -12,7 +12,6 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
-/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 import styles from './navigation-drawer.module.scss';
 
 /* eslint-disable-next-line */
@@ -75,25 +74,14 @@ export function NavigationDrawer(props: NavigationDrawerProps) {
   );
 
   return (
-    <div>
-      <Button
-        sx={{
-          position: 'fixed',
-          top: '50%',
-          left: -10,
-          width: 20,
-          height: 60,
-          boxShadow: '3px 0 3px 0 rgba(0,0,0,0.3)',
-          paddingRight: 0,
-        }}
-        onClick={toggleDrawer(true)}
-      >
+    <>
+      <Button className={styles['drawer-button']} onClick={toggleDrawer(true)}>
         <KeyboardArrowRightIcon />
       </Button>
       <Drawer anchor={'left'} open={isOpen} onClose={toggleDrawer(false)}>
         {navMenu()}
       </Drawer>
-    </div>
+    </>
   );
 }
 

@@ -1,7 +1,12 @@
-/*
- * Replace this with your own classes
- *
- * e.g.
- * .container {
- * }
-*/
+.drawer-button {
+  --button-width: 20px;
+  --button-height: 60px;
+  top: calc(50vh - (var(--button-height) / 2));
+  left: -10px;
+  width: var(--button-width);
+  height: var(--button-height);
+  box-shadow: 3px 0 3px 0 rgba(0,0,0,0.3);
+  padding-right: 0;
+  z-index: 100;
+  background-color: #fff;
+}
