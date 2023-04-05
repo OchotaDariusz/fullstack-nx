@@ -1,15 +1,22 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.scss';
-
-import NxWelcome from './nx-welcome';
-
 import { Route, Routes, Link } from 'react-router-dom';
+
+import { NavigationDrawer } from '@fullstack/ui';
+
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
+import styles from './app.module.scss';
 
 export function App() {
   return (
     <>
-      <NxWelcome title="frontend" />
-
+      <NavigationDrawer />
+      {/*<ContentWrapper>*/}
+      {/*  <MainContent />*/}
+      {/*</ContentWrapper>*/}
       <div />
 
       {/* START: routes */}

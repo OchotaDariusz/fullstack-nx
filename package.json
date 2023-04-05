@@ -5,10 +5,24 @@
   "scripts": {
     "backend:start": "nx run backend:serve",
     "backend:build": "nx run backend:build",
-    "backend:e2e": "nx run backend-e2e:e2e --skip-nx-cloud"
+    "backend:test": "nx run backend:test",
+    "backend:e2e": "nx run backend-e2e:e2e --skip-nx-cloud",
+    "frontend:start": "nx run frontend:serve",
+    "frontend:build": "nx run frontend:build",
+    "frontend:test": "nx run frontend:test",
+    "frotnend:e2e": "nx run frotnend-e2e:e2e --skip-nx-cloud",
+    "changes:graph": "nx affected:graph",
+    "changes:test": "nx affected:test",
+    "changes:e2e": "nx affected:e2e --skip-nx-cloud",
+    "format": "nx format:write"
   },
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.11.16",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/jwt": "^10.0.3",
