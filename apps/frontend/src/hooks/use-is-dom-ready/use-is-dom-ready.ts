@@ -7,7 +7,7 @@ export interface UseIsDomReady {
 }
 
 export function useIsDomReady(): boolean {
-  const [isDomReady, setIsDomReady] = useState(false)
+  const [isDomReady, setIsDomReady] = useState(false);
   useEffect(() => {
     setIsDomReady(true);
   }, []);

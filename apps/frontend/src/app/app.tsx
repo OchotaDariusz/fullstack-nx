@@ -3,7 +3,7 @@ import { Route, Routes, Link } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 
 import { ContentWrapper, MainContent, NavigationDrawer } from '@fullstack/ui';
-import useIsDomReady from "../hooks/use-is-dom-ready/use-is-dom-ready";
+import useIsDomReady from '../hooks/use-is-dom-ready/use-is-dom-ready';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -18,10 +18,12 @@ export function App() {
 
   return (
     <>
-      {isDomReady ? ReactDOM.createPortal(
-        <NavigationDrawer />,
-        document.getElementById('navbar') as HTMLElement
-      ) : null}
+      {isDomReady
+        ? ReactDOM.createPortal(
+            <NavigationDrawer />,
+            document.getElementById('navbar') as HTMLElement
+          )
+        : null}
       <ContentWrapper>
         <MainContent />
       </ContentWrapper>
