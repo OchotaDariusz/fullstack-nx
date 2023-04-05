@@ -1,4 +1,4 @@
-import React, { FormEventHandler, ReducerAction, useReducer } from 'react';
+import React, { FormEventHandler, ReducerAction, useReducer, useState } from "react";
 import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -12,6 +12,8 @@ import Container from '@mui/material/Container';
 
 import { handleTextChange, signFormReducer } from '@fullstack/reducers';
 import { RegisterRequest } from '@fullstack/interfaces';
+import Checkbox from '@mui/material/Checkbox';
+import FormControlLabel from '@mui/material/FormControlLabel';
 
 const initialRegisterFormState: RegisterRequest = {
   email: '',
@@ -23,10 +25,15 @@ const initialRegisterFormState: RegisterRequest = {
 export interface RegisterFormProps {}
 
 export function RegisterForm(props: RegisterFormProps) {
+  const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
   const [formState, dispatch] = useReducer(
     signFormReducer,
     initialRegisterFormState
   );
+
+  const handleCheckbox = () => {
+    setIsCheckboxSelected(prevState => !prevState);
+  }
 
   const textChangeHandler = () => {
     return (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -75,45 +82,52 @@ export function RegisterForm(props: RegisterFormProps) {
           Sign up
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                id="email"
-                label="Email Address"
-                name="email"
-                autoComplete="email"
-                onChange={textChangeHandler()}
-                value={formState.email}
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email Address"
+            name="email"
+            autoComplete="email"
+            autoFocus
+            onChange={textChangeHandler()}
+            value={formState.email}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type={isCheckboxSelected ? 'text' : 'password'}
+            id="password"
+            autoComplete="new-password"
+            onChange={textChangeHandler()}
+            value={formState.password}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="passwordConfirm"
+            label="Password Confirmation"
+            type={isCheckboxSelected ? 'text' : 'password'}
+            id="passwordConfirm"
+            onChange={textChangeHandler()}
+            value={(formState as RegisterRequest).passwordConfirm}
+          />
+          <FormControlLabel
+            control={
+              <Checkbox
+                defaultChecked={false}
+                onChange={handleCheckbox}
+                value="remember"
+                color="primary"
               />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                name="password"
-                label="Password"
-                type="password"
-                id="password"
-                autoComplete="new-password"
-                onChange={textChangeHandler()}
-                value={formState.password}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <TextField
-                required
-                fullWidth
-                name="passwordConfirm"
-                label="Password Confirmation"
-                type="password"
-                id="passwordConfirm"
-                onChange={textChangeHandler()}
-                value={(formState as RegisterRequest).passwordConfirm}
-              />
-            </Grid>
-          </Grid>
+            }
+            label="Show password"
+          />
           <Button
             type="submit"
             fullWidth

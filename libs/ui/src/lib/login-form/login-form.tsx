@@ -1,4 +1,9 @@
-import React, { FormEventHandler, ReducerAction, useReducer } from 'react';
+import React, {
+  FormEventHandler,
+  ReducerAction,
+  useReducer,
+  useState,
+} from 'react';
 import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -24,10 +29,15 @@ const initialLoginFormState: LoginRequest = {
 export interface LoginFormProps {}
 
 export function LoginForm(props: LoginFormProps) {
+  const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
   const [formState, dispatch] = useReducer(
     signFormReducer,
     initialLoginFormState
   );
+
+  const handleCheckbox = () => {
+    setIsCheckboxSelected(prevState => !prevState);
+  }
 
   const textChangeHandler = () => {
     return (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -92,15 +102,22 @@ export function LoginForm(props: LoginFormProps) {
             fullWidth
             name="password"
             label="Password"
-            type="password"
+            type={isCheckboxSelected ? 'text' : 'password'}
             id="password"
             autoComplete="current-password"
             onChange={textChangeHandler()}
             value={formState.password}
           />
           <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            control={
+              <Checkbox
+                defaultChecked={false}
+                onChange={handleCheckbox}
+                value="remember"
+                color="primary"
+              />
+            }
+            label="Show password"
           />
           <Button
             type="submit"
