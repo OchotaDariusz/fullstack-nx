@@ -1,7 +1,9 @@
+import React from 'react';
 import { Route, Routes, Link } from 'react-router-dom';
 import ReactDOM from 'react-dom';
 
 import { ContentWrapper, MainContent, NavigationDrawer } from '@fullstack/ui';
+import useIsDomReady from "../hooks/use-is-dom-ready/use-is-dom-ready";
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -12,12 +14,14 @@ import '@fontsource/roboto/700.css';
 import styles from './app.module.scss';
 
 export function App() {
+  const isDomReady = useIsDomReady();
+
   return (
     <>
-      {ReactDOM.createPortal(
+      {isDomReady ? ReactDOM.createPortal(
         <NavigationDrawer />,
         document.getElementById('navbar') as HTMLElement
-      )}
+      ) : null}
       <ContentWrapper>
         <MainContent />
       </ContentWrapper>

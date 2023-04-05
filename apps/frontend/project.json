@@ -47,14 +47,14 @@
     "serve": {
       "executor": "@nrwl/webpack:dev-server",
       "defaultConfiguration": "development",
-      "proxyConfig": "apps/frontend/proxy.conf.json",
       "options": {
         "buildTarget": "frontend:build",
         "hmr": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "frontend:build:development"
+          "buildTarget": "frontend:build:development",
+          "proxyConfig": "apps/frontend/proxy.conf.json"
         },
         "production": {
           "buildTarget": "frontend:build:production",

@@ -22,10 +22,21 @@ export function LoginForm(props: LoginFormProps) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const email = data.get('email');
+    const password = data.get('password');
+    fetch('/api/auth/login', {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ username: email, password }),
+    })
+      .then(res => res.json())
+      .then(data => {
+        console.log(data);
+        (event.target as HTMLFormElement).reset();
+      })
+      .catch(err => console.log(err));
   };
 
   return (
