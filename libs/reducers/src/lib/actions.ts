@@ -1,6 +1,6 @@
-import React, { FormEventHandler, ReducerAction } from "react";
+import React, { FormEventHandler, ReducerAction } from 'react';
 
-import { ACTION } from "@fullstack/constants";
+import { ACTION } from '@fullstack/constants';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export const handleTextChange = (

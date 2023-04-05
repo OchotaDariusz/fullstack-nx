@@ -1,4 +1,4 @@
-import React, { FormEventHandler, ReducerAction, useReducer } from "react";
+import React, { FormEventHandler, ReducerAction, useReducer } from 'react';
 import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -10,8 +10,8 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
-import { handleTextChange, signFormReducer } from "@fullstack/reducers";
-import { RegisterRequest } from "@fullstack/interfaces";
+import { handleTextChange, signFormReducer } from '@fullstack/reducers';
+import { RegisterRequest } from '@fullstack/interfaces';
 
 const initialRegisterFormState: RegisterRequest = {
   email: '',
@@ -38,7 +38,8 @@ export function RegisterForm(props: RegisterFormProps) {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (formState.password !== (formState as RegisterRequest).passwordConfirm) return;
+    if (formState.password !== (formState as RegisterRequest).passwordConfirm)
+      return;
     fetch('/api/auth/register', {
       method: 'POST',
       headers: {
