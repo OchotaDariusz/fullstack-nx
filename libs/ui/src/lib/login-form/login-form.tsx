@@ -36,8 +36,8 @@ export function LoginForm(props: LoginFormProps) {
   );
 
   const handleCheckbox = () => {
-    setIsCheckboxSelected(prevState => !prevState);
-  }
+    setIsCheckboxSelected((prevState) => !prevState);
+  };
 
   const textChangeHandler = () => {
     return (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -60,7 +60,7 @@ export function LoginForm(props: LoginFormProps) {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         (event.target as HTMLFormElement).reset();
       })
       .catch((err) => console.log(err));

@@ -1,4 +1,9 @@
-import React, { FormEventHandler, ReducerAction, useReducer, useState } from "react";
+import React, {
+  FormEventHandler,
+  ReducerAction,
+  useReducer,
+  useState,
+} from 'react';
 import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -32,8 +37,8 @@ export function RegisterForm(props: RegisterFormProps) {
   );
 
   const handleCheckbox = () => {
-    setIsCheckboxSelected(prevState => !prevState);
-  }
+    setIsCheckboxSelected((prevState) => !prevState);
+  };
 
   const textChangeHandler = () => {
     return (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) =>
@@ -58,7 +63,7 @@ export function RegisterForm(props: RegisterFormProps) {
       }),
     })
       .then((res) => res.json())
-      .then((data) => {
+      .then(() => {
         (event.target as HTMLFormElement).reset();
       })
       .catch((err) => console.log(err));
