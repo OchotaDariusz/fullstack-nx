@@ -3,6 +3,7 @@ import { Container } from '@mui/material';
 import SignalWifiBadIcon from '@mui/icons-material/SignalWifiBad';
 
 import { SignForm } from '../sign-form/sign-form';
+import { ThemeSwitchButton } from '../theme-switch-button/theme-switch-button';
 
 /* eslint-disable-next-line */
 type ContentWrapperProps = {
@@ -14,6 +15,7 @@ export function ContentWrapper({ children }: ContentWrapperProps) {
 
   return (
     <Container component={'main'} sx={{ justifyContent: 'center' }}>
+      <ThemeSwitchButton />
       {!isLoggedIn && <SignForm />}
       {isLoggedIn && children}
     </Container>
