@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FormEventHandler, ReducerAction, useReducer } from 'react';
 import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -12,25 +12,45 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
+import { LoginRequest } from '@fullstack/interfaces';
+import { handleTextChange, signFormReducer } from '@fullstack/reducers';
+
+const initialLoginFormState: LoginRequest = {
+  email: '',
+  password: '',
+};
+
 /* eslint-disable-next-line */
 export interface LoginFormProps {}
 
 export function LoginForm(props: LoginFormProps) {
+  const [formState, dispatch] = useReducer(
+    signFormReducer,
+    initialLoginFormState
+  );
+
+  const textChangeHandler = () => {
+    return (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      handleTextChange(
+        dispatch as React.Dispatch<ReducerAction<FormEventHandler>>,
+        e
+      );
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const email = data.get('email');
-    const password = data.get('password');
     fetch('/api/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username: email, password }),
+      body: JSON.stringify({
+        username: formState.email,
+        password: formState.password,
+      }),
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         (event.target as HTMLFormElement).reset();
       })
       .catch((err) => console.log(err));
@@ -63,6 +83,8 @@ export function LoginForm(props: LoginFormProps) {
             name="email"
             autoComplete="email"
             autoFocus
+            onChange={textChangeHandler()}
+            value={formState.email}
           />
           <TextField
             margin="normal"
@@ -73,6 +95,8 @@ export function LoginForm(props: LoginFormProps) {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange={textChangeHandler()}
+            value={formState.password}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -86,12 +110,7 @@ export function LoginForm(props: LoginFormProps) {
           >
             Sign In
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link to="#">
-                <Typography variant="body2">Forgot password?</Typography>
-              </Link>
-            </Grid>
+          <Grid container justifyContent="flex-end">
             <Grid item>
               <Link to="/register">
                 <Typography variant="body2">

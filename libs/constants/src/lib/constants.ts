@@ -11,3 +11,7 @@ export const jwtConstants = {
 };
 
 export const ROLES_KEY = 'roles';
+
+export enum ACTION {
+  GET_TEXT,
+}

@@ -1,28 +1,59 @@
-import React from 'react';
+import React, { FormEventHandler, ReducerAction, useReducer } from "react";
 import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
+import { handleTextChange, signFormReducer } from "@fullstack/reducers";
+import { RegisterRequest } from "@fullstack/interfaces";
+
+const initialRegisterFormState: RegisterRequest = {
+  email: '',
+  password: '',
+  passwordConfirm: '',
+};
+
 /* eslint-disable-next-line */
 export interface RegisterFormProps {}
 
 export function RegisterForm(props: RegisterFormProps) {
+  const [formState, dispatch] = useReducer(
+    signFormReducer,
+    initialRegisterFormState
+  );
+
+  const textChangeHandler = () => {
+    return (e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) =>
+      handleTextChange(
+        dispatch as React.Dispatch<ReducerAction<FormEventHandler>>,
+        e
+      );
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    if (formState.password !== (formState as RegisterRequest).passwordConfirm) return;
+    fetch('/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        username: formState.email,
+        password: formState.password,
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        (event.target as HTMLFormElement).reset();
+      })
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -44,27 +75,6 @@ export function RegisterForm(props: RegisterFormProps) {
         </Typography>
         <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                autoComplete="given-name"
-                name="firstName"
-                required
-                fullWidth
-                id="firstName"
-                label="First Name"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                required
-                fullWidth
-                id="lastName"
-                label="Last Name"
-                name="lastName"
-                autoComplete="family-name"
-              />
-            </Grid>
             <Grid item xs={12}>
               <TextField
                 required
@@ -73,6 +83,8 @@ export function RegisterForm(props: RegisterFormProps) {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
+                onChange={textChangeHandler()}
+                value={formState.email}
               />
             </Grid>
             <Grid item xs={12}>
@@ -84,12 +96,20 @@ export function RegisterForm(props: RegisterFormProps) {
                 type="password"
                 id="password"
                 autoComplete="new-password"
+                onChange={textChangeHandler()}
+                value={formState.password}
               />
             </Grid>
             <Grid item xs={12}>
-              <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
+              <TextField
+                required
+                fullWidth
+                name="passwordConfirm"
+                label="Password Confirmation"
+                type="password"
+                id="passwordConfirm"
+                onChange={textChangeHandler()}
+                value={(formState as RegisterRequest).passwordConfirm}
               />
             </Grid>
           </Grid>
@@ -101,7 +121,7 @@ export function RegisterForm(props: RegisterFormProps) {
           >
             Sign Up
           </Button>
-          <Grid container justifyContent="flex-end">
+          <Grid container>
             <Grid item>
               <Link to="/login">
                 <Typography variant="body2">

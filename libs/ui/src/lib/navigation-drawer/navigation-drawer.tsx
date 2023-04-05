@@ -13,12 +13,14 @@ import MailIcon from '@mui/icons-material/Mail';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 import styles from './navigation-drawer.module.scss';
+import { Link } from 'react-router-dom';
 
 /* eslint-disable-next-line */
 export interface NavigationDrawerProps {}
 
 export function NavigationDrawer(props: NavigationDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const isLoggedIn = false; // TODO: change to redux
 
   const toggleDrawer =
     (isVisible: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -79,7 +81,14 @@ export function NavigationDrawer(props: NavigationDrawerProps) {
         <KeyboardArrowRightIcon />
       </Button>
       <Drawer anchor={'left'} open={isOpen} onClose={toggleDrawer(false)}>
-        {navMenu()}
+        {!isLoggedIn && (
+          <Link to="/login">
+            <Button onClick={toggleDrawer(false)}>
+              Sign in to see content
+            </Button>
+          </Link>
+        )}
+        {isLoggedIn && navMenu()}
       </Drawer>
     </>
   );
