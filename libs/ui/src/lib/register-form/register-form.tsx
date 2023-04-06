@@ -4,7 +4,7 @@ import React, {
   useReducer,
   useState,
 } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,11 +14,12 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
-
-import { handleTextChange, signFormReducer } from '@fullstack/reducers';
-import { RegisterRequest } from '@fullstack/interfaces';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+
+import { fetchData } from '@fullstack/data-manager';
+import { handleTextChange, signFormReducer } from '@fullstack/reducers';
+import { RegisterRequest } from '@fullstack/interfaces';
 
 const initialRegisterFormState: RegisterRequest = {
   email: '',
@@ -26,15 +27,13 @@ const initialRegisterFormState: RegisterRequest = {
   passwordConfirm: '',
 };
 
-/* eslint-disable-next-line */
-export interface RegisterFormProps {}
-
-export function RegisterForm(props: RegisterFormProps) {
+export function RegisterForm() {
   const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
   const [formState, dispatch] = useReducer(
     signFormReducer,
     initialRegisterFormState
   );
+  const navigate = useNavigate();
 
   const handleCheckbox = () => {
     setIsCheckboxSelected((prevState) => !prevState);
@@ -52,19 +51,15 @@ export function RegisterForm(props: RegisterFormProps) {
     event.preventDefault();
     if (formState.password !== (formState as RegisterRequest).passwordConfirm)
       return;
-    fetch('/api/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: formState.email,
-        password: formState.password,
-      }),
-    })
-      .then((res) => res.json())
-      .then(() => {
-        (event.target as HTMLFormElement).reset();
+    const registerRequest: Partial<RegisterRequest> = {
+      username: formState.email,
+      password: formState.password,
+    };
+    fetchData
+      .post('/api/auth/register', registerRequest)
+      .then((response) => {
+        // TODO: toast
+        navigate('/login');
       })
       .catch((err) => console.log(err));
   };

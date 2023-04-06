@@ -4,7 +4,7 @@ import React, {
   useReducer,
   useState,
 } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -17,6 +17,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 
+import { fetchData } from '@fullstack/data-manager';
 import { LoginRequest } from '@fullstack/interfaces';
 import { handleTextChange, signFormReducer } from '@fullstack/reducers';
 
@@ -25,15 +26,13 @@ const initialLoginFormState: LoginRequest = {
   password: '',
 };
 
-/* eslint-disable-next-line */
-export interface LoginFormProps {}
-
-export function LoginForm(props: LoginFormProps) {
+export function LoginForm() {
   const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
   const [formState, dispatch] = useReducer(
     signFormReducer,
     initialLoginFormState
   );
+  const navigate = useNavigate();
 
   const handleCheckbox = () => {
     setIsCheckboxSelected((prevState) => !prevState);
@@ -49,19 +48,18 @@ export function LoginForm(props: LoginFormProps) {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    fetch('/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        username: formState.email,
-        password: formState.password,
-      }),
-    })
-      .then((res) => res.json())
-      .then(() => {
-        (event.target as HTMLFormElement).reset();
+    const loginRequest: LoginRequest = {
+      username: formState.email,
+      password: formState.password,
+    };
+    fetchData
+      .post('/api/auth/login', loginRequest)
+      .then((response) => {
+        if ('access_token' in response.data) {
+          localStorage.setItem('access_token', response.data.access_token);
+        }
+        // TODO: toast
+        navigate('/');
       })
       .catch((err) => console.log(err));
   };

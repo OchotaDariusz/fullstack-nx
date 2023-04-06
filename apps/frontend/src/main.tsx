@@ -16,12 +16,14 @@ root.render(
   <StrictMode>
     <BrowserRouter>
       <ThemeColorWrapper>
-        <CssBaseline />
-        {ReactDOM.createPortal(
-          <NavigationDrawer />,
-          document.getElementById('navbar') as HTMLElement
-        )}
-        <App />
+        <>
+          <CssBaseline />
+          {ReactDOM.createPortal(
+            <NavigationDrawer />,
+            document.getElementById('navbar') as HTMLElement
+          )}
+          <App />
+        </>
       </ThemeColorWrapper>
     </BrowserRouter>
   </StrictMode>

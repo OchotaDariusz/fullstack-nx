@@ -1,5 +1,6 @@
 export interface RegisterRequest {
-  email: string;
+  email?: string;
+  username?: string;
   password: string;
   passwordConfirm: string;
 }
