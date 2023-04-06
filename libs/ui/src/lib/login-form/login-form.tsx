@@ -16,6 +16,7 @@ import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
+import { toast } from 'react-toastify';
 
 import { fetchData } from '@fullstack/data-manager';
 import { LoginRequest } from '@fullstack/interfaces';
@@ -58,10 +59,13 @@ export function LoginForm() {
         if ('access_token' in response.data) {
           localStorage.setItem('access_token', response.data.access_token);
         }
-        // TODO: toast
+        toast.success('Logged in.');
         navigate('/');
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err);
+        toast.error('Something went wrong!');
+      });
   };
 
   return (

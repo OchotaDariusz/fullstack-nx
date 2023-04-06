@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { ToastContainer } from 'react-toastify';
 import { Container } from '@mui/material';
 import SignalWifiBadIcon from '@mui/icons-material/SignalWifiBad';
 
@@ -18,6 +19,19 @@ export function ContentWrapper({ children }: ContentWrapperProps) {
       <ThemeSwitchButton />
       {!isLoggedIn && <SignForm />}
       {isLoggedIn && children}
+      <ToastContainer
+        position="bottom-center"
+        autoClose={3000}
+        limit={3}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss={false}
+        draggable={false}
+        pauseOnHover={false}
+        theme="light"
+      />
     </Container>
   );
 }

@@ -5,9 +5,10 @@ import { BrowserRouter } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { NavigationDrawer } from '@fullstack/ui';
-import App from './app/app';
-import './styles.scss';
 import { ThemeColorWrapper } from '@fullstack/ui';
+import App from './app/app';
+import 'react-toastify/dist/ReactToastify.css';
+import './styles.scss';
 
 const root = ReactDOMClient.createRoot(
   document.getElementById('root') as HTMLElement

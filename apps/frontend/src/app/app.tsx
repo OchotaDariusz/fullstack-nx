@@ -1,4 +1,5 @@
 import React from 'react';
+import { Route, Routes, Link } from 'react-router-dom';
 
 import { ContentWrapper, MainContent } from '@fullstack/ui';
 
@@ -6,8 +7,6 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-
-import { Route, Routes, Link } from 'react-router-dom';
 
 export function App() {
   return (

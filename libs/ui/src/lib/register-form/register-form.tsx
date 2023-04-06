@@ -16,6 +16,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import { toast } from 'react-toastify';
 
 import { fetchData } from '@fullstack/data-manager';
 import { handleTextChange, signFormReducer } from '@fullstack/reducers';
@@ -57,11 +58,14 @@ export function RegisterForm() {
     };
     fetchData
       .post('/api/auth/register', registerRequest)
-      .then((response) => {
-        // TODO: toast
+      .then(() => {
+        toast.success('Account created.');
         navigate('/login');
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.error(err);
+        toast.error('Something went wrong!');
+      });
   };
 
   return (
