@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
@@ -12,15 +14,26 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
+import { Role } from '@fullstack/types';
+import { User } from '@fullstack/interfaces';
 import styles from './navigation-drawer.module.scss';
-import { Link } from 'react-router-dom';
 
 /* eslint-disable-next-line */
-export interface NavigationDrawerProps {}
+export interface NavigationDrawerProps {
+  authState: User;
+}
 
-export function NavigationDrawer(props: NavigationDrawerProps) {
+export function NavigationDrawer({ authState }: NavigationDrawerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const isLoggedIn = false; // TODO: change to redux
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    if ((authState.roles as Role[])?.length > 0) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, [authState]);
 
   const toggleDrawer =
     (isVisible: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
@@ -94,4 +107,9 @@ export function NavigationDrawer(props: NavigationDrawerProps) {
   );
 }
 
-export default NavigationDrawer;
+const mapStateToProps = (state: User) => ({
+  authState: state,
+});
+
+export const ConnectedNavigationDrawer =
+  connect(mapStateToProps)(NavigationDrawer);

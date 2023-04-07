@@ -14,4 +14,6 @@ export const ROLES_KEY = 'roles';
 
 export enum ACTION {
   GET_TEXT,
+  LOGIN,
+  LOGOUT,
 }

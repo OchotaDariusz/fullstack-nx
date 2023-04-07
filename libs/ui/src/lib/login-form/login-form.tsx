@@ -4,6 +4,7 @@ import React, {
   useReducer,
   useState,
 } from 'react';
+import { connect } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -18,16 +19,28 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { toast } from 'react-toastify';
 
+import { ACTION } from '@fullstack/constants';
 import { fetchData } from '@fullstack/data-manager';
-import { LoginRequest } from '@fullstack/interfaces';
-import { handleTextChange, signFormReducer } from '@fullstack/reducers';
+import { LoginRequest, User } from '@fullstack/interfaces';
+import {
+  handleTextChange,
+  signFormReducer,
+  login,
+  logout,
+} from '@fullstack/reducers';
 
 const initialLoginFormState: LoginRequest = {
   email: '',
   password: '',
 };
 
-export function LoginForm() {
+type LoginFormProps = {
+  authState: User;
+  login: (authState: User) => { payload: User; type: ACTION };
+  logout: () => { type: ACTION };
+};
+
+export function LoginForm({ authState, login, logout }: LoginFormProps) {
   const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
   const [formState, dispatch] = useReducer(
     signFormReducer,
@@ -55,10 +68,16 @@ export function LoginForm() {
     };
     fetchData
       .post('/api/auth/login', loginRequest)
-      .then((response) => {
+      .then(async (response) => {
         if ('access_token' in response.data) {
           localStorage.setItem('access_token', response.data.access_token);
         }
+        const user = await fetchData.get('/api/auth/current', {
+          headers: {
+            Authorization: `Bearer ${response.data.access_token}`,
+          },
+        });
+        login(user.data);
         toast.success('Logged in.');
         navigate('/');
       })
@@ -144,4 +163,13 @@ export function LoginForm() {
   );
 }
 
-export default LoginForm;
+const mapStateToProps = (state: User) => ({
+  authState: state,
+});
+
+const mapDispatchToProps = {
+  login,
+  logout,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
