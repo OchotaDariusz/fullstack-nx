@@ -29,6 +29,7 @@ const initialRegisterFormState: RegisterRequest = {
 };
 
 export function RegisterForm() {
+  const [isLoading, setIsLoading] = useState(false);
   const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
   const [formState, dispatch] = useReducer(
     signFormReducer,
@@ -56,14 +57,18 @@ export function RegisterForm() {
       username: formState.email,
       password: formState.password,
     };
+    setIsLoading(true);
+    toast.info('Wait...');
     fetchData
       .post('/api/auth/register', registerRequest)
       .then(() => {
         toast.success('Account created.');
+        setIsLoading(false);
         navigate('/login');
       })
       .catch((err) => {
         console.error(err);
+        setIsLoading(false);
         toast.error('Something went wrong!');
       });
   };
@@ -137,6 +142,7 @@ export function RegisterForm() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={isLoading}
           >
             Sign Up
           </Button>

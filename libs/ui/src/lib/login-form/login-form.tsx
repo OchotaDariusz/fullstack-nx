@@ -41,6 +41,7 @@ type LoginFormProps = {
 };
 
 export function LoginForm({ authState, login, logout }: LoginFormProps) {
+  const [isLoading, setIsLoading] = useState(false);
   const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
   const [formState, dispatch] = useReducer(
     signFormReducer,
@@ -66,6 +67,8 @@ export function LoginForm({ authState, login, logout }: LoginFormProps) {
       username: formState.email,
       password: formState.password,
     };
+    setIsLoading(true);
+    toast.info('Wait...');
     fetchData
       .post('/api/auth/login', loginRequest)
       .then(async (response) => {
@@ -79,10 +82,12 @@ export function LoginForm({ authState, login, logout }: LoginFormProps) {
         });
         login(user.data);
         toast.success('Logged in.');
+        setIsLoading(false);
         navigate('/');
       })
       .catch((err) => {
         console.error(err);
+        setIsLoading(false);
         toast.error('Something went wrong!');
       });
   };
@@ -145,6 +150,7 @@ export function LoginForm({ authState, login, logout }: LoginFormProps) {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={isLoading}
           >
             Sign In
           </Button>
