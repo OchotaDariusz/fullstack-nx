@@ -1,31 +1,22 @@
-import React, { ReactNode, useEffect, useState } from 'react';
+import React, { ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { connect } from 'react-redux';
 import { Container } from '@mui/material';
 import SignalWifiBadIcon from '@mui/icons-material/SignalWifiBad';
 
 import { User } from '@fullstack/interfaces';
-import { Role } from '@fullstack/types';
 import { SignForm } from '../sign-form/sign-form';
 import { ThemeSwitchButton } from '../theme-switch-button/theme-switch-button';
 
 /* eslint-disable-next-line */
 type ContentWrapperProps = {
-  authState: User;
   children?: ReactNode;
+  isLoggedIn: boolean;
 };
 
-export function ContentWrapper({ authState, children }: ContentWrapperProps) {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    if ((authState.roles as Role[])?.length > 0) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, [authState]);
-
+export function ContentWrapper({ children, isLoggedIn }: ContentWrapperProps) {
+  console.log('isLoggedIn')
+  console.log(isLoggedIn)
   return (
     <Container component={'main'} sx={{ justifyContent: 'center' }}>
       <ThemeSwitchButton />

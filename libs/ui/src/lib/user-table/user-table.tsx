@@ -1,9 +1,8 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   DataGrid,
   GridColDef,
   GridPaginationModel,
-  GridRowId,
   GridValueGetterParams,
 } from '@mui/x-data-grid';
 
@@ -45,12 +44,23 @@ export function UserTable(props: UserTableProps) {
   });
   const [isLoading, setIsLoading] = useState(false);
 
+  // get how many users are in db
+  const [usersCount, setUsersCount] = useState(0);
   useEffect(() => {
-    console.log(paginationModel);
+    fetchData
+      .get('/api/users/?count=true')
+      .then((response) => {
+        setUsersCount(response.data);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  // handle pagination side effects
+  useEffect(() => {
     setIsLoading(true);
     fetchData
-      .get(`/api/users?page=${paginationModel.page || 0}`)
-      // .get('/api/users')
+      // .get(`/api/users?page=${paginationModel.page || 0}`)
+      .get('/api/users')
       .then((response) => response.data)
       .then((users: User[]) => {
         setRows(users);
@@ -65,12 +75,13 @@ export function UserTable(props: UserTableProps) {
   const handlePaginationModelChange = (
     newPaginationModel: GridPaginationModel
   ) => {
-    // We have the cursor, we can allow the page transition.
     if (newPaginationModel.page === 0) {
       setPaginationModel(newPaginationModel);
     }
-    console.log(paginationModel);
-    console.log(newPaginationModel);
+    // console.log("paginationModel");
+    // console.log(paginationModel);
+    // console.log("newPaginationModel");
+    // console.log(newPaginationModel);
   };
 
   return (
@@ -80,9 +91,10 @@ export function UserTable(props: UserTableProps) {
         columns={columns}
         pagination
         paginationMode="server"
-        autoPageSize={true}
+        pageSizeOptions={[5,15,25,50]}
+        autoPageSize={false}
         loading={isLoading}
-        rowCount={rows.length}
+        rowCount={usersCount}
         checkboxSelection
         onPaginationModelChange={handlePaginationModelChange}
         paginationModel={paginationModel}

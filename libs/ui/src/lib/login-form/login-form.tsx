@@ -19,7 +19,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { toast } from 'react-toastify';
 
-import { ACTION } from '@fullstack/constants';
+import { ACTION, JWT_LOCAL_STORAGE_KEY } from '@fullstack/constants';
 import { fetchData } from '@fullstack/data-manager';
 import { LoginRequest, User } from '@fullstack/interfaces';
 import {
@@ -72,18 +72,17 @@ export function LoginForm({ authState, login, logout }: LoginFormProps) {
     fetchData
       .post('/api/auth/login', loginRequest)
       .then(async (response) => {
-        if ('access_token' in response.data) {
-          localStorage.setItem('access_token', response.data.access_token);
+        if (JWT_LOCAL_STORAGE_KEY in response.data) {
+          localStorage.setItem(
+            JWT_LOCAL_STORAGE_KEY,
+            response.data.access_token
+          );
         }
-        const user = await fetchData.get('/api/auth/current', {
-          headers: {
-            Authorization: `Bearer ${response.data.access_token}`,
-          },
-        });
+        const user = await fetchData.get('/api/auth/current');
         login(user.data);
         toast.success('Logged in.');
         setIsLoading(false);
-        navigate('/');
+        window.location.reload();
       })
       .catch((err) => {
         console.error(err);

@@ -10,9 +10,6 @@ import { ColorModeContext } from './../theme-color-wrapper/theme-color-wrapper';
 export function ThemeSwitchButton() {
   const theme = useTheme();
   const colorMode = useContext(ColorModeContext);
-  useEffect(() => {
-    console.log(theme);
-  });
   return (
     <Box
       sx={{

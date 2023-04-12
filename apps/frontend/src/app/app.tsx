@@ -1,28 +1,42 @@
-import React, { useEffect } from 'react';
+import React, { lazy, Suspense, useEffect, useState, useMemo } from 'react';
 import { connect } from 'react-redux';
-import { Route, Routes, Link } from 'react-router-dom';
 
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { ConnectedContentWrapper, MainContent } from '@fullstack/ui';
+import { ConnectedContentWrapper, LoadingSpinner } from '@fullstack/ui';
+import {
+  AUTH_STATE_LOCAL_STORAGE_KEY,
+  JWT_LOCAL_STORAGE_KEY,
+} from '@fullstack/constants';
+import { Role } from '@fullstack/types';
+import { User } from '@fullstack/interfaces';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { User } from '@fullstack/interfaces';
 
-type AppProps = {
+const MainContent = lazy(() => import('../wrappers/main-content-wrapper'));
+
+interface AppProps {
   authState: User;
-};
+}
 
 export function App({ authState }: AppProps) {
-  useEffect(() => {
-    console.log(authState);
-  }, [authState]);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return (
+      localStorage.getItem(AUTH_STATE_LOCAL_STORAGE_KEY) !== '' &&
+      localStorage.getItem(JWT_LOCAL_STORAGE_KEY) !== ''
+    );
+  });
 
+  console.log(isLoggedIn);
+  console.log(localStorage.getItem(AUTH_STATE_LOCAL_STORAGE_KEY));
+  console.log(localStorage.getItem(JWT_LOCAL_STORAGE_KEY));
   return (
-    <ConnectedContentWrapper>
-      <MainContent />
+    <ConnectedContentWrapper isLoggedIn={isLoggedIn}>
+      <Suspense fallback={<LoadingSpinner />}>
+        {isLoggedIn && <MainContent />}
+      </Suspense>
     </ConnectedContentWrapper>
   );
 }

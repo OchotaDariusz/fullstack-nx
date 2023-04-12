@@ -7,11 +7,11 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  Post,
+  Post, Query,
   UseGuards,
   UsePipes,
-  ValidationPipe,
-} from '@nestjs/common';
+  ValidationPipe
+} from "@nestjs/common";
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 
 import { Role } from '@fullstack/types';
@@ -30,7 +30,8 @@ export class UsersController {
   @Get()
   @UseGuards(JwtAuthGuard)
   @Roles(Role.ADMIN)
-  getAllUsers() {
+  getAllUsers(@Query('count') count?: boolean) {
+    if (count) return this.userService.countAll();
     return this.userService.getAllUsers();
   }
 

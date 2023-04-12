@@ -1,3 +1,4 @@
+export * from './lib/loading-spinner/loading-spinner';
 export * from './lib/user-table/user-table';
 export * from './lib/sign-form/sign-form';
 export * from './lib/main-content/main-content';

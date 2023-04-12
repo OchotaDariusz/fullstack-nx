@@ -37,6 +37,10 @@ export class UsersService {
     });
   }
 
+  async countAll(): Promise<number> {
+    return await this.userRepository.count();
+  }
+
   async getUserByUsername(username: string): Promise<User> {
     const user = await this.userRepository.findOneBy({ username });
     if (!user) {

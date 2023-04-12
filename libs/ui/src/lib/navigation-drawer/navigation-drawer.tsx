@@ -17,6 +17,10 @@ import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Role } from '@fullstack/types';
 import { User } from '@fullstack/interfaces';
 import styles from './navigation-drawer.module.scss';
+import {
+  AUTH_STATE_LOCAL_STORAGE_KEY,
+  JWT_LOCAL_STORAGE_KEY,
+} from '@fullstack/constants';
 
 /* eslint-disable-next-line */
 export interface NavigationDrawerProps {
@@ -74,16 +78,20 @@ export function NavigationDrawer({ authState }: NavigationDrawerProps) {
       </List>
       <Divider />
       <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem key={text} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItemButton>
-          </ListItem>
-        ))}
+        <ListItem key={'logout'} disablePadding>
+          <ListItemButton
+            onClick={() => {
+              localStorage.setItem(AUTH_STATE_LOCAL_STORAGE_KEY, '');
+              localStorage.setItem(JWT_LOCAL_STORAGE_KEY, '');
+              window.location.reload();
+            }}
+          >
+            <ListItemIcon>
+              <InboxIcon />
+            </ListItemIcon>
+            <ListItemText primary={'logout'} />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
