@@ -1,5 +1,5 @@
 import styles from './loading-spinner.module.scss';
-import { CircularProgress } from "@mui/material";
+import { CircularProgress } from '@mui/material';
 
 /* eslint-disable-next-line */
 export interface LoadingSpinnerProps {}

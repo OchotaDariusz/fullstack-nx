@@ -7,11 +7,12 @@ import {
   Param,
   ParseUUIDPipe,
   Patch,
-  Post, Query,
+  Post,
+  Query,
   UseGuards,
   UsePipes,
-  ValidationPipe
-} from "@nestjs/common";
+  ValidationPipe,
+} from '@nestjs/common';
 import { ApiSecurity, ApiTags } from '@nestjs/swagger';
 
 import { Role } from '@fullstack/types';

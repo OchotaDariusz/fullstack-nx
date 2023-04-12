@@ -15,8 +15,8 @@ type ContentWrapperProps = {
 };
 
 export function ContentWrapper({ children, isLoggedIn }: ContentWrapperProps) {
-  console.log('isLoggedIn')
-  console.log(isLoggedIn)
+  console.log('isLoggedIn');
+  console.log(isLoggedIn);
   return (
     <Container component={'main'} sx={{ justifyContent: 'center' }}>
       <ThemeSwitchButton />

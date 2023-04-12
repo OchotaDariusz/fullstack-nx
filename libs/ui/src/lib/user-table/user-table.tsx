@@ -91,7 +91,7 @@ export function UserTable(props: UserTableProps) {
         columns={columns}
         pagination
         paginationMode="server"
-        pageSizeOptions={[5,15,25,50]}
+        pageSizeOptions={[5, 15, 25, 50]}
         autoPageSize={false}
         loading={isLoading}
         rowCount={usersCount}

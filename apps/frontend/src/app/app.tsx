@@ -29,9 +29,6 @@ export function App({ authState }: AppProps) {
     );
   });
 
-  console.log(isLoggedIn);
-  console.log(localStorage.getItem(AUTH_STATE_LOCAL_STORAGE_KEY));
-  console.log(localStorage.getItem(JWT_LOCAL_STORAGE_KEY));
   return (
     <ConnectedContentWrapper isLoggedIn={isLoggedIn}>
       <Suspense fallback={<LoadingSpinner />}>
