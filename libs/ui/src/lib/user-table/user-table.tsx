@@ -59,8 +59,8 @@ export function UserTable(props: UserTableProps) {
   useEffect(() => {
     setIsLoading(true);
     fetchData
-      // .get(`/api/users?page=${paginationModel.page || 0}`)
-      .get('/api/users')
+      .get(`/api/users?page=${paginationModel.page + 1}`)
+      // .get('/api/users')
       .then((response) => response.data)
       .then((users: User[]) => {
         setRows(users);
@@ -75,13 +75,11 @@ export function UserTable(props: UserTableProps) {
   const handlePaginationModelChange = (
     newPaginationModel: GridPaginationModel
   ) => {
-    if (newPaginationModel.page === 0) {
-      setPaginationModel(newPaginationModel);
-    }
-    // console.log("paginationModel");
-    // console.log(paginationModel);
-    // console.log("newPaginationModel");
-    // console.log(newPaginationModel);
+    setPaginationModel(newPaginationModel);
+    console.log('old');
+    console.log(paginationModel);
+    console.log('new');
+    console.log(newPaginationModel);
   };
 
   return (
@@ -91,7 +89,6 @@ export function UserTable(props: UserTableProps) {
         columns={columns}
         pagination
         paginationMode="server"
-        pageSizeOptions={[5, 15, 25, 50]}
         autoPageSize={false}
         loading={isLoading}
         rowCount={usersCount}

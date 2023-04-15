@@ -20,7 +20,7 @@ import { RolesGuard } from './guards/roles.guard';
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '600s' },
     }),
     TypeOrmModule.forFeature([UserEntity]),
   ],
