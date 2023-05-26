@@ -1,6 +1,11 @@
 {
-  "name": "fullstack",
-  "version": "0.0.0",
+  "name": "fullstack-nx",
+  "version": "1.0.0",
+  "homepage": "https://ochotadariusz.github.io/fullstack-nx/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ochotadariusz/fullstack-nx.git"
+  },
   "license": "MIT",
   "scripts": {
     "backend:start": "nx run backend:serve",
@@ -9,12 +14,15 @@
     "backend:e2e": "nx run backend-e2e:e2e --skip-nx-cloud",
     "frontend:start": "nx run frontend:serve",
     "frontend:build": "nx run frontend:build",
+    "frontend:build:prod": "nx build frontend --buildLibsFromSource",
     "frontend:test": "nx run frontend:test",
     "frotnend:e2e": "nx run frotnend-e2e:e2e --skip-nx-cloud",
     "changes:graph": "nx affected:graph",
     "changes:test": "nx affected:test",
     "changes:e2e": "nx affected:e2e --skip-nx-cloud",
-    "format": "nx format:write"
+    "format": "nx format:write",
+    "predeploy": "npm run frontend:build:prod -- --prod --baseHref=/fullstack-nx/",
+    "deploy": "gh-pages -d dist/apps/frontend"
   },
   "private": true,
   "dependencies": {
@@ -36,6 +44,7 @@
     "bcrypt": "^5.1.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
+    "cors": "^2.8.5",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
@@ -68,6 +77,7 @@
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@svgr/webpack": "^6.1.2",
     "@testing-library/react": "14.0.0",
+    "@types/cors": "^2.8.13",
     "@types/jest": "^29.4.0",
     "@types/node": "18.14.2",
     "@types/passport-jwt": "^3.0.8",
@@ -86,6 +96,7 @@
     "eslint-plugin-jsx-a11y": "6.7.1",
     "eslint-plugin-react": "7.32.2",
     "eslint-plugin-react-hooks": "4.6.0",
+    "gh-pages": "^5.0.0",
     "jest": "^29.4.1",
     "jest-environment-jsdom": "^29.4.1",
     "jest-environment-node": "^29.4.1",
