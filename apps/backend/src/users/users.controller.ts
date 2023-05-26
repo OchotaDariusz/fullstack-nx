@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -8,11 +9,12 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiSecurity, ApiTags } from '@nestjs/swagger';
+import { ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 
 import { Role } from '@fullstack/types';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -28,10 +30,15 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Get()
+  @ApiQuery({ name: 'count', required: false, type: Boolean })
+  @ApiQuery({ name: 'page', required: false, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles(Role.ADMIN)
-  getAllUsers() {
-    return this.userService.getAllUsers();
+  getAllUsers(@Query('count') count?: boolean, @Query('page') page?: number) {
+    if (count && !page) return this.userService.countAll();
+    if (!count && page) return this.userService.getUsers(page);
+    if (!count && !page) return this.userService.getAllUsers();
+    throw new BadRequestException();
   }
 
   @Get('/:uuid')

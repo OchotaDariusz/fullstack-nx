@@ -11,3 +11,13 @@ export const jwtConstants = {
 };
 
 export const ROLES_KEY = 'roles';
+
+export enum ACTION {
+  GET_TEXT,
+  LOGIN,
+  LOGOUT,
+}
+
+export const JWT_LOCAL_STORAGE_KEY = 'access_token';
+
+export const AUTH_STATE_LOCAL_STORAGE_KEY = 'auth';

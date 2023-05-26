@@ -16,8 +16,12 @@
     "baseUrl": ".",
     "paths": {
       "@fullstack/constants": ["libs/constants/src/index.ts"],
+      "@fullstack/data-manager": ["libs/data-manager/src/index.ts"],
+      "@fullstack/hooks": ["libs/hooks/src/index.ts"],
       "@fullstack/interfaces": ["libs/interfaces/src/index.ts"],
-      "@fullstack/types": ["libs/types/src/index.ts"]
+      "@fullstack/reducers": ["libs/reducers/src/index.ts"],
+      "@fullstack/types": ["libs/types/src/index.ts"],
+      "@fullstack/ui": ["libs/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

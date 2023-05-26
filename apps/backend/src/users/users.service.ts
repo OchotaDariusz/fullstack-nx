@@ -37,6 +37,21 @@ export class UsersService {
     });
   }
 
+  async getUsers(page: number): Promise<User[]> {
+    const users = await this.userRepository
+      .createQueryBuilder('users')
+      .take(5)
+      .skip((page - 1) * 5)
+      .getMany();
+    return users.map((user) => {
+      return this.stripUserPassword(user);
+    });
+  }
+
+  async countAll(): Promise<number> {
+    return await this.userRepository.count();
+  }
+
   async getUserByUsername(username: string): Promise<User> {
     const user = await this.userRepository.findOneBy({ username });
     if (!user) {
