@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useEffect, useState, useMemo } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
 import { connect } from 'react-redux';
 
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
@@ -7,7 +7,6 @@ import {
   AUTH_STATE_LOCAL_STORAGE_KEY,
   JWT_LOCAL_STORAGE_KEY,
 } from '@fullstack/constants';
-import { Role } from '@fullstack/types';
 import { User } from '@fullstack/interfaces';
 
 import '@fontsource/roboto/300.css';
