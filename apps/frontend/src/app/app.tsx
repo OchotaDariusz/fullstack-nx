@@ -1,10 +1,9 @@
-import React, { lazy, Suspense, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import React, { lazy, Suspense } from 'react';
 
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { useGetLoginState } from '@fullstack/hooks';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { ContentWrapper, LoadingSpinner } from '@fullstack/ui';
-import { JWT_LOCAL_STORAGE_KEY } from '@fullstack/constants';
-import { User } from '@fullstack/interfaces';
 
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -14,13 +13,7 @@ import '@fontsource/roboto/700.css';
 const MainContent = lazy(() => import('../wrappers/main-content-wrapper'));
 
 export function App() {
-  const authState = useSelector<never, User>((state) => state);
-  const isLoggedIn = useMemo(() => {
-    return (
-      authState.roles!.length > 0 &&
-      localStorage.getItem(JWT_LOCAL_STORAGE_KEY) !== ''
-    );
-  }, [authState.roles]);
+  const isLoggedIn = useGetLoginState();
 
   return (
     <ContentWrapper isLoggedIn={isLoggedIn}>

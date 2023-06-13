@@ -1,5 +1,5 @@
-import { KeyboardEvent, MouseEvent, useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { KeyboardEvent, MouseEvent, useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import Box from '@mui/material/Box';
@@ -15,24 +15,14 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
+import { useGetLoginState } from '@fullstack/hooks';
 import { logout } from '@fullstack/reducers';
-import { Role } from '@fullstack/types';
-import { User } from '@fullstack/interfaces';
 import styles from './navigation-drawer.module.scss';
 
 export function NavigationDrawer() {
-  const authState = useSelector<never, User>((state) => state);
   const authDispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    if ((authState.roles as Role[])?.length > 0) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
-  }, [authState.roles]);
+  const isLoggedIn = useGetLoginState();
 
   const toggleDrawer =
     (isVisible: boolean) => (event: KeyboardEvent | MouseEvent) => {
