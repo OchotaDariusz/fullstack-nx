@@ -1,12 +1,9 @@
-import React, { lazy, Suspense, useState } from 'react';
-import { connect } from 'react-redux';
+import React, { lazy, Suspense, useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { ConnectedContentWrapper, LoadingSpinner } from '@fullstack/ui';
-import {
-  AUTH_STATE_LOCAL_STORAGE_KEY,
-  JWT_LOCAL_STORAGE_KEY,
-} from '@fullstack/constants';
+import { ContentWrapper, LoadingSpinner } from '@fullstack/ui';
+import { JWT_LOCAL_STORAGE_KEY } from '@fullstack/constants';
 import { User } from '@fullstack/interfaces';
 
 import '@fontsource/roboto/300.css';
@@ -16,29 +13,22 @@ import '@fontsource/roboto/700.css';
 
 const MainContent = lazy(() => import('../wrappers/main-content-wrapper'));
 
-interface AppProps {
-  authState: User;
-}
-
-export function App({ authState }: AppProps) {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+export function App() {
+  const authState = useSelector<never, User>((state) => state);
+  const isLoggedIn = useMemo(() => {
     return (
-      localStorage.getItem(AUTH_STATE_LOCAL_STORAGE_KEY) !== '' &&
+      authState.roles!.length > 0 &&
       localStorage.getItem(JWT_LOCAL_STORAGE_KEY) !== ''
     );
-  });
+  }, [authState.roles]);
 
   return (
-    <ConnectedContentWrapper isLoggedIn={isLoggedIn}>
+    <ContentWrapper isLoggedIn={isLoggedIn}>
       <Suspense fallback={<LoadingSpinner />}>
         {isLoggedIn && <MainContent />}
       </Suspense>
-    </ConnectedContentWrapper>
+    </ContentWrapper>
   );
 }
 
-const mapStateToProps = (state: User) => ({
-  authState: state,
-});
-
-export default connect(mapStateToProps)(App);
+export default App;

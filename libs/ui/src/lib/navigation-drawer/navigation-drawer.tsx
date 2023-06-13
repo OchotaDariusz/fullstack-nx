@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { connect } from 'react-redux';
+import { KeyboardEvent, MouseEvent, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
@@ -14,20 +15,14 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import MailIcon from '@mui/icons-material/Mail';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
+import { logout } from '@fullstack/reducers';
 import { Role } from '@fullstack/types';
 import { User } from '@fullstack/interfaces';
 import styles from './navigation-drawer.module.scss';
-import {
-  AUTH_STATE_LOCAL_STORAGE_KEY,
-  JWT_LOCAL_STORAGE_KEY,
-} from '@fullstack/constants';
 
-/* eslint-disable-next-line */
-export interface NavigationDrawerProps {
-  authState: User;
-}
-
-export function NavigationDrawer({ authState }: NavigationDrawerProps) {
+export function NavigationDrawer() {
+  const authState = useSelector<never, User>((state) => state);
+  const authDispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -37,20 +32,24 @@ export function NavigationDrawer({ authState }: NavigationDrawerProps) {
     } else {
       setIsLoggedIn(false);
     }
-  }, [authState]);
+  }, [authState.roles]);
 
   const toggleDrawer =
-    (isVisible: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    (isVisible: boolean) => (event: KeyboardEvent | MouseEvent) => {
       if (
         event.type === 'keydown' &&
-        ((event as React.KeyboardEvent).key === 'Tab' ||
-          (event as React.KeyboardEvent).key === 'Shift')
+        ((event as KeyboardEvent).key === 'Tab' ||
+          (event as KeyboardEvent).key === 'Shift')
       ) {
         return;
       }
-
       setIsOpen(isVisible);
     };
+
+  const handleLogout = () => {
+    authDispatch(logout());
+    toast.info('Logged out.');
+  };
 
   const navMenu = () => (
     <Box
@@ -79,13 +78,7 @@ export function NavigationDrawer({ authState }: NavigationDrawerProps) {
       <Divider />
       <List>
         <ListItem key={'logout'} disablePadding>
-          <ListItemButton
-            onClick={() => {
-              localStorage.setItem(AUTH_STATE_LOCAL_STORAGE_KEY, '');
-              localStorage.setItem(JWT_LOCAL_STORAGE_KEY, '');
-              window.location.reload();
-            }}
-          >
+          <ListItemButton onClick={handleLogout}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
@@ -114,10 +107,3 @@ export function NavigationDrawer({ authState }: NavigationDrawerProps) {
     </>
   );
 }
-
-const mapStateToProps = (state: User) => ({
-  authState: state,
-});
-
-export const ConnectedNavigationDrawer =
-  connect(mapStateToProps)(NavigationDrawer);

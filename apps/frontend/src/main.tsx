@@ -7,7 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 
 import { store } from '@fullstack/reducers';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { ConnectedNavigationDrawer, ThemeColorWrapper } from '@fullstack/ui';
+import { NavigationDrawer, ThemeColorWrapper } from '@fullstack/ui';
 import App from './app/app';
 import 'react-toastify/dist/ReactToastify.css';
 import './styles.scss';
@@ -24,7 +24,7 @@ root.render(
           <>
             <CssBaseline />
             {ReactDOM.createPortal(
-              <ConnectedNavigationDrawer />,
+              <NavigationDrawer />,
               document.getElementById('navbar') as HTMLElement
             )}
             <App />

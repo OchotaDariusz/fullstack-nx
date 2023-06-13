@@ -4,8 +4,8 @@ import React, {
   useReducer,
   useState,
 } from 'react';
-import { connect } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -19,35 +19,24 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { toast } from 'react-toastify';
 
-import { ACTION, JWT_LOCAL_STORAGE_KEY } from '@fullstack/constants';
+import { JWT_LOCAL_STORAGE_KEY } from '@fullstack/constants';
 import { fetchData } from '@fullstack/data-manager';
-import { LoginRequest, User } from '@fullstack/interfaces';
-import {
-  handleTextChange,
-  signFormReducer,
-  login,
-  logout,
-} from '@fullstack/reducers';
+import { LoginRequest } from '@fullstack/interfaces';
+import { handleTextChange, signFormReducer, login } from '@fullstack/reducers';
 
 const initialLoginFormState: LoginRequest = {
   email: '',
   password: '',
 };
 
-type LoginFormProps = {
-  authState: User;
-  login: (authState: User) => { payload: User; type: ACTION };
-  logout: () => { type: ACTION };
-};
-
-export function LoginForm({ authState, login, logout }: LoginFormProps) {
+export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckboxSelected, setIsCheckboxSelected] = useState(false);
   const [formState, dispatch] = useReducer(
     signFormReducer,
     initialLoginFormState
   );
-  const navigate = useNavigate();
+  const authDispatch = useDispatch();
 
   const handleCheckbox = () => {
     setIsCheckboxSelected((prevState) => !prevState);
@@ -77,17 +66,19 @@ export function LoginForm({ authState, login, logout }: LoginFormProps) {
             JWT_LOCAL_STORAGE_KEY,
             response.data.access_token
           );
+        } else {
+          throw new Error('Login failed.');
         }
         const user = await fetchData.get('/api/auth/current');
-        login(user.data);
+        authDispatch(login(user.data));
         toast.success('Logged in.');
-        setIsLoading(false);
-        window.location.reload();
       })
       .catch((err) => {
         console.error(err);
-        setIsLoading(false);
         toast.error('Something went wrong!');
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
@@ -168,13 +159,4 @@ export function LoginForm({ authState, login, logout }: LoginFormProps) {
   );
 }
 
-const mapStateToProps = (state: User) => ({
-  authState: state,
-});
-
-const mapDispatchToProps = {
-  login,
-  logout,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(LoginForm);
+export default LoginForm;

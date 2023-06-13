@@ -1,4 +1,4 @@
-import { ACTION } from '@fullstack/constants';
+import { ACTION, JWT_LOCAL_STORAGE_KEY } from '@fullstack/constants';
 import { User, UserAction } from '@fullstack/interfaces';
 
 export const initialAuthState: User = {
@@ -20,6 +20,7 @@ export const authReducer = (
         roles: action.payload?.roles,
       };
     case ACTION.LOGOUT:
+      localStorage.setItem(JWT_LOCAL_STORAGE_KEY, '');
       return {
         ...initialAuthState,
       };

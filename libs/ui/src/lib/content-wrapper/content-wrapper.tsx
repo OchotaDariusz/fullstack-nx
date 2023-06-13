@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { connect } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Container } from '@mui/material';
 import SignalWifiBadIcon from '@mui/icons-material/SignalWifiBad';
 
@@ -15,8 +15,11 @@ type ContentWrapperProps = {
 };
 
 export function ContentWrapper({ children, isLoggedIn }: ContentWrapperProps) {
-  console.log('isLoggedIn');
-  console.log(isLoggedIn);
+  const authState = useSelector<never, User>((state) => state); // TODO: delete
+
+  console.log(authState); // TODO: delete
+  console.log('isLoggedIn'); // TODO: delete
+  console.log(isLoggedIn); // TODO: delete
   return (
     <Container component={'main'} sx={{ justifyContent: 'center' }}>
       <ThemeSwitchButton />
@@ -42,9 +45,3 @@ export function ContentWrapper({ children, isLoggedIn }: ContentWrapperProps) {
 ContentWrapper.defaultProps = {
   children: <SignalWifiBadIcon color="disabled" fontSize="large" />,
 };
-
-const mapStateToProps = (state: User) => ({
-  authState: state,
-});
-
-export const ConnectedContentWrapper = connect(mapStateToProps)(ContentWrapper);
