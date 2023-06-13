@@ -2,9 +2,7 @@ import axios, { AxiosInstance } from 'axios';
 import { JWT_LOCAL_STORAGE_KEY } from '@fullstack/constants';
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:3000',
-  // baseURL: 'https://fullstack-nx.onrender.com',
-  timeout: 300000, // 5 minutes
+  baseURL: process.env['NX_BACKEND_HOST'],
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
