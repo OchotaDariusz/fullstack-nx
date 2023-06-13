@@ -2,10 +2,7 @@ import React from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 import UserTable from '../user-table/user-table';
 
-/* eslint-disable-next-line */
-export interface MainContentProps {}
-
-export function MainContent(props: MainContentProps) {
+export function MainContent() {
   return (
     <>
       <UserTable />
@@ -48,5 +45,3 @@ export function MainContent(props: MainContentProps) {
     </>
   );
 }
-
-export default MainContent;

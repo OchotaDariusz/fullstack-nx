@@ -26,7 +26,6 @@ const store = configureStore({
 });
 
 store.subscribe(() => {
-  console.log(store.getState());
   localStorage.setItem('auth', JSON.stringify(store.getState()));
 });
 

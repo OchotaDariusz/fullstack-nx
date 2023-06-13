@@ -15,11 +15,6 @@ type ContentWrapperProps = {
 };
 
 export function ContentWrapper({ children, isLoggedIn }: ContentWrapperProps) {
-  const authState = useSelector<never, User>((state) => state); // TODO: delete
-
-  console.log(authState); // TODO: delete
-  console.log('isLoggedIn'); // TODO: delete
-  console.log(isLoggedIn); // TODO: delete
   return (
     <Container component={'main'} sx={{ justifyContent: 'center' }}>
       <ThemeSwitchButton />
