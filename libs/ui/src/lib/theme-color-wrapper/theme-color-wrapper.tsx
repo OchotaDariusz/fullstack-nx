@@ -1,4 +1,4 @@
-import React, { ReactNode, useCallback } from 'react';
+import React, { ReactNode } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { ACTION, THEME_MODE_LOCAL_SETTINGS } from '@fullstack/constants';
@@ -16,7 +16,7 @@ interface ThemeColorWrapperProps {
 
 export function ThemeColorWrapper({ children }: ThemeColorWrapperProps) {
   const themeModeState = useAppSelector((state) => state.mode);
-  const themeModeDispatch = useCallback(useAppDispatch(), []);
+  const themeModeDispatch = useAppDispatch();
   const [mode, setMode] = React.useState<ColorMode>(
     themeModeState.mode as ColorMode
   );
@@ -31,7 +31,7 @@ export function ThemeColorWrapper({ children }: ThemeColorWrapperProps) {
         });
       },
     }),
-    []
+    [themeModeDispatch]
   );
 
   const theme = React.useMemo(

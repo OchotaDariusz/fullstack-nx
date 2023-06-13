@@ -21,22 +21,7 @@ const columns: GridColDef[] = [
   },
 ];
 
-const rows = [
-  { id: crypto.randomUUID(), username: 'Snow', roles: ['user'] },
-  { id: crypto.randomUUID(), username: 'Lannister', roles: ['user'] },
-  { id: crypto.randomUUID(), username: 'Lannister', roles: ['user'] },
-  { id: crypto.randomUUID(), username: 'Stark', roles: ['user'] },
-  { id: crypto.randomUUID(), username: 'Targaryen', roles: ['user'] },
-  { id: crypto.randomUUID(), username: 'Melisandre', roles: ['user'] },
-  { id: crypto.randomUUID(), username: 'Clifford', roles: ['user'] },
-  { id: crypto.randomUUID(), username: 'Frances', roles: ['user'] },
-  { id: crypto.randomUUID(), username: 'Roxie', roles: ['user'] },
-];
-
-/* eslint-disable-next-line */
-export interface UserTableProps {}
-
-export function UserTable(props: UserTableProps) {
+export function UserTable() {
   const [rows, setRows] = useState<User[]>([]);
   const [paginationModel, setPaginationModel] = React.useState({
     page: 0,
