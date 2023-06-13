@@ -2,7 +2,7 @@ import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import * as ReactDOMClient from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import { store } from '@fullstack/reducers';
@@ -19,7 +19,7 @@ const root = ReactDOMClient.createRoot(
 root.render(
   <Provider store={store}>
     <StrictMode>
-      <BrowserRouter>
+      <HashRouter>
         <ThemeColorWrapper>
           <>
             <CssBaseline />
@@ -30,7 +30,7 @@ root.render(
             <App />
           </>
         </ThemeColorWrapper>
-      </BrowserRouter>
+      </HashRouter>
     </StrictMode>
   </Provider>
 );

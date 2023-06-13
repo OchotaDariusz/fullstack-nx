@@ -5,7 +5,7 @@ import React, {
   useState,
 } from 'react';
 import { useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -38,6 +38,7 @@ export function LoginForm() {
     initialLoginFormState
   );
   const authDispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleCheckbox = () => {
     setIsCheckboxSelected((prevState) => !prevState);
@@ -75,13 +76,14 @@ export function LoginForm() {
             '/api/auth/current'
           );
           authDispatch(login(user.data));
+          navigate('/');
           toast.success('Logged in.');
-        } catch (err: any) {
-          throw new Error(err.message as string);
+        } catch (_err) {
+          throw new Error("There's no such user.");
         }
       })
       .catch((err) => {
-        console.error(err);
+        toast.error(err.message);
         toast.error('Something went wrong!');
       })
       .finally(() => {

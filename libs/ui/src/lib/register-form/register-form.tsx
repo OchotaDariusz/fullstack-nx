@@ -63,13 +63,14 @@ export function RegisterForm() {
       .post('/api/auth/register', registerRequest)
       .then(() => {
         toast.success('Account created.');
-        setIsLoading(false);
         navigate('/login');
       })
       .catch((err) => {
-        console.error(err);
-        setIsLoading(false);
+        toast.error(err.message);
         toast.error('Something went wrong!');
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   };
 
