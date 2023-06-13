@@ -1,16 +1,12 @@
 import { ACTION } from '@fullstack/constants';
-import { User } from '@fullstack/interfaces';
+import { User, UserAction } from '@fullstack/interfaces';
 
-const initialAuthState: User = {
+export const initialAuthState: User = {
   id: '',
   username: '',
   roles: [],
 };
 
-export interface UserAction {
-  type: ACTION;
-  payload?: User;
-}
 export const authReducer = (
   state: User = initialAuthState,
   action: UserAction
