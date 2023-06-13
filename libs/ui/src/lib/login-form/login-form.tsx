@@ -21,9 +21,9 @@ import { toast } from 'react-toastify';
 
 import { JWT_LOCAL_STORAGE_KEY } from '@fullstack/constants';
 import { fetchData } from '@fullstack/data-manager';
-import { LoginRequest, User } from "@fullstack/interfaces";
+import { LoginRequest, User } from '@fullstack/interfaces';
 import { handleTextChange, signFormReducer, login } from '@fullstack/reducers';
-import { AxiosResponse } from "axios";
+import { AxiosResponse } from 'axios';
 
 const initialLoginFormState: LoginRequest = {
   email: '',
@@ -71,7 +71,9 @@ export function LoginForm() {
           throw new Error('Login failed.');
         }
         try {
-          const user: AxiosResponse<User> = await fetchData.get('/api/auth/current');
+          const user: AxiosResponse<User> = await fetchData.get(
+            '/api/auth/current'
+          );
           authDispatch(login(user.data));
           toast.success('Logged in.');
         } catch (err: any) {

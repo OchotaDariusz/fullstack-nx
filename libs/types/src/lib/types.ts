@@ -3,8 +3,8 @@ export enum Role {
   USER = 'user',
 }
 
-export interface AuthObject {
-  id: string;
-  username: string;
-  roles: Role[];
-}
+export type ColorMode = 'light' | 'dark';
+
+export type ThemeMode = {
+  mode: ColorMode | string;
+};

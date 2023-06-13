@@ -16,8 +16,11 @@ export enum ACTION {
   GET_TEXT,
   LOGIN,
   LOGOUT,
+  TOGGLE_THEME,
 }
 
 export const JWT_LOCAL_STORAGE_KEY = 'access_token';
 
 export const AUTH_STATE_LOCAL_STORAGE_KEY = 'auth';
+
+export const THEME_MODE_LOCAL_SETTINGS = 'theme_mode';

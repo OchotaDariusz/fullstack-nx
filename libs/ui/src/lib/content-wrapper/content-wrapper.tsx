@@ -1,10 +1,8 @@
 import React, { ReactNode } from 'react';
 import { ToastContainer } from 'react-toastify';
-import { useSelector } from 'react-redux';
 import { Container } from '@mui/material';
 import SignalWifiBadIcon from '@mui/icons-material/SignalWifiBad';
 
-import { User } from '@fullstack/interfaces';
 import { SignForm } from '../sign-form/sign-form';
 import { ThemeSwitchButton } from '../theme-switch-button/theme-switch-button';
 

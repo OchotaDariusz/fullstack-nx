@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useMemo, useState } from 'react';
 
 import { User } from '../../../interfaces/src';
 import { Role } from '../../../types/src';
 import { JWT_LOCAL_STORAGE_KEY } from '../../../constants/src';
 import { logout } from '../../../reducers/src';
+import { useAppDispatch, useAppSelector } from '../../../reducers/src';
 
 const validateAuthState = (authState: User): boolean => {
   const stateHaveIdField = 'id' in authState;
@@ -27,18 +27,22 @@ const validateAuthState = (authState: User): boolean => {
 };
 
 export const useGetLoginState = (): boolean => {
-  const authState = useSelector<never, User>((state) => state);
-  const authDispatch = useDispatch();
+  const authState = useAppSelector((state) => state.auth);
+  const authDispatch = useAppDispatch();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const isAuthStateValid = useMemo(
+    () => validateAuthState(authState),
+    [authState]
+  );
 
   useEffect(() => {
-    if (validateAuthState(authState)) {
+    if (isAuthStateValid) {
       setIsLoggedIn(true);
     } else {
       authDispatch(logout());
       setIsLoggedIn(false);
     }
-  }, [authState]);
+  }, [isAuthStateValid]);
 
   return isLoggedIn;
 };
