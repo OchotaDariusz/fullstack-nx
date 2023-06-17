@@ -1,27 +1,28 @@
 import axios, { AxiosInstance } from 'axios';
-import { JWT_LOCAL_STORAGE_KEY } from '@fullstack/constants';
-import axiosRetry from "axios-retry";
-import { toast } from "react-toastify";
+import { JWT_LOCAL_STORAGE_KEY, serverConstants } from '@fullstack/constants';
+import axiosRetry from 'axios-retry';
+import { toast } from 'react-toastify';
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: process.env['NX_BACKEND_HOST'],
+  baseURL: serverConstants.backendHost,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Origin': serverConstants.frontendHost ?? '*',
+    'Cache-Control': 'private, max-age=100000, must-revalidate',
   },
 });
 
 axiosRetry(axiosInstance, {
-  retries: 300,
+  retries: 5,
   retryDelay: (_retryCount) => {
-    return 100000;
+    return 10000;
   },
   onRetry: (_retryCount, error) => {
     error && toast.error(error.message);
     toast.info('Trying again soon...');
-  }
-})
+  },
+});
 
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem(JWT_LOCAL_STORAGE_KEY);
@@ -33,17 +34,17 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-axiosInstance.interceptors.response.use((response) => {
-  console.log('Received response:', response);
-  return response;
-}, (error) => {
-  console.error('Error response:', error);
-  if (axiosRetry.isRetryableError(error)) {
-    toast.info('Retrying request...');
-    return axiosRetry.isRetryableError(error);
+axiosInstance.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (axiosRetry.isRetryableError(error)) {
+      toast.info('Retrying request...');
+      return axiosRetry.isRetryableError(error);
+    }
+    return Promise.reject(error);
   }
-  if (axiosRetry.isNetworkError(error)) toast.error('Network error.');
-  return Promise.reject(error);
-});
+);
 
 export { axiosInstance as fetchData };

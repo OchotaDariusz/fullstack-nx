@@ -10,6 +10,12 @@ export const jwtConstants = {
   secret: process.env['NX_JWT_SECRET'],
 };
 
+export const serverConstants = {
+  frontendHost: process.env['NX_FRONTEND_HOST'],
+  backendHost: process.env['NX_BACKEND_HOST'],
+  env: process.env['NX_NODE_ENV'],
+};
+
 export const ROLES_KEY = 'roles';
 
 export enum ACTION {

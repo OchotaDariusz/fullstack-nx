@@ -9,6 +9,8 @@ import { AuthModule } from '../auth/auth.module';
 import entities from '../entities';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { UsersModule } from '../users/users.module';
+import { HealthModule } from '../health/health.module';
+import { TerminusLoggerService } from '../health/terminus-logger.service';
 
 @Module({
   imports: [
@@ -21,6 +23,7 @@ import { UsersModule } from '../users/users.module';
         password: dbConstants.password,
         database: dbConstants.name,
         entities,
+        autoLoadEntities: true,
         synchronize: true,
         ssl: true,
         extra: {
@@ -31,6 +34,7 @@ import { UsersModule } from '../users/users.module';
       }),
     }),
     AuthModule,
+    HealthModule,
     UsersModule,
   ],
   controllers: [AppController],
@@ -40,6 +44,7 @@ import { UsersModule } from '../users/users.module';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
+    TerminusLoggerService,
   ],
 })
 export class AppModule {}

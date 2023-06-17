@@ -49,7 +49,16 @@ function EditToolbar(props: EditToolbarProps) {
   const handleClick = () => {
     const id: string = crypto.randomUUID();
     setRows((oldRows: GridRowsProp) =>
-      [...oldRows, { id, username: 'new user', roles: ['user'] }].reverse()
+      [
+        ...oldRows,
+        {
+          id,
+          username: 'new user',
+          password:
+            '$2b$10$mg7KG9fSZaHbOU0EZzSYk.I20qiYB/AAbSOtb37kODVTXWQVLEmCm',
+          roles: ['user'],
+        },
+      ].reverse()
     );
     setRowModesModel((oldModel) => ({
       ...oldModel,
@@ -73,12 +82,7 @@ export function UserTable() {
     pageSize: 5,
   });
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
-  const [sortModel, setSortModel] = useState<GridSortModel>([
-    {
-      field: 'roles',
-      sort: 'asc',
-    },
-  ]);
+  const [sortModel, setSortModel] = useState<GridSortModel>([]);
 
   const { isLoading, usersCount, setUsersCount, rows, setRows } = useFetchUsers(
     `/api/users?page=${paginationModel.page + 1}&limit=${
@@ -129,14 +133,7 @@ export function UserTable() {
       if (Array.isArray(response) && (response as [User, boolean])[1]) {
         isSaveSucceeded = (response as [User, boolean])[1];
         setUsersCount((prevState) => prevState + 1);
-        setRows((rows) => {
-          const oldRows = [...rows];
-          oldRows[oldRows.length - 1].id = (response as User[])[0].id;
-          oldRows[oldRows.length - 1].username = (
-            response as User[]
-          )[0].username;
-          return [...oldRows];
-        });
+        setPaginationModel({ page: 0, pageSize: 5 });
       } else {
         isSaveSucceeded = response as boolean;
       }
@@ -207,7 +204,14 @@ export function UserTable() {
       filterOperators: [],
     },
     { field: 'username', headerName: 'Username', flex: 2, editable: true },
-    { field: 'password', headerName: 'Password', flex: 3, editable: true, sortable: false, filterable: false },
+    {
+      field: 'password',
+      headerName: 'Password',
+      flex: 3,
+      editable: true,
+      sortable: false,
+      filterable: false,
+    },
     {
       field: 'roles',
       headerName: 'Roles',
@@ -312,7 +316,7 @@ export function UserTable() {
           toolbar: EditToolbar,
         }}
         slotProps={{
-          toolbar: { setRows, setRowModesModel, showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
+          toolbar: { setRows, setRowModesModel },
         }}
         sortModel={sortModel}
       />

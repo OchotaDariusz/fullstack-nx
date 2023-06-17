@@ -16,7 +16,7 @@ const useGetUsersCount = (): [
       .then((response) => {
         setUsersCount(response.data);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => toast.error(err.message));
   }, []);
 
   return [usersCount, setUsersCount];
@@ -88,8 +88,8 @@ const fetchUserData = async (
 
 export const checkIfUserExists = async (id: string): Promise<boolean> => {
   try {
-    await fetchData.get(`/api/users/${id}`);
-    return true;
+    const response = await fetchData.get(`/api/users/${id}`);
+    return 'id' in response.data;
   } catch (_err) {
     return false;
   }

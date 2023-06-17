@@ -6,14 +6,40 @@ import {
   SwaggerModule,
 } from '@nestjs/swagger';
 import cors from 'cors';
+import { Request, Response, NextFunction } from 'express';
 
 import { AppModule } from './app/app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
+
+function preventCrossSiteScripting(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void {
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  next();
+}
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+    cors: true,
+  });
+
+  app.disable('x-powered-by');
+  app.use(preventCrossSiteScripting);
   app.use(cors());
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    Logger.log(
+      `[${new Date().toDateString()}] - [${req.ip}] - [${req.method}]: ${
+        req.url
+      }`
+    );
+    next();
+  });
+
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
+
   const config = new DocumentBuilder()
     .addSecurity('bearer', {
       type: 'http',
@@ -28,8 +54,10 @@ async function bootstrap() {
   };
   const document = SwaggerModule.createDocument(app, config, options);
   SwaggerModule.setup('docs', app, document);
+
   const port = process.env.PORT || 3000;
   await app.listen(port);
+
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
   );
