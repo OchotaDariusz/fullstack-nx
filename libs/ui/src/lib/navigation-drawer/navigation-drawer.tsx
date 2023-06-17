@@ -38,7 +38,7 @@ export function NavigationDrawer() {
 
   const handleLogout = () => {
     authDispatch(logout());
-    toast.info('Logged out.');
+    toast.success('Logged out.');
   };
 
   const navMenu = () => (

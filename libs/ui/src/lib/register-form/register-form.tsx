@@ -66,6 +66,9 @@ export function RegisterForm() {
           render: 'Account created.',
           type: 'success',
           isLoading: false,
+          closeOnClick: true,
+          autoClose: 3000,
+          closeButton: true,
         });
         navigate('/login');
       })
@@ -74,6 +77,9 @@ export function RegisterForm() {
           render: 'Something went wrong!',
           type: 'error',
           isLoading: false,
+          closeOnClick: true,
+          autoClose: 3000,
+          closeButton: true,
         });
         toast.error(err.message);
       })

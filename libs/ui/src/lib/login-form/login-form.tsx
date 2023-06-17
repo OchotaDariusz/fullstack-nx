@@ -81,6 +81,9 @@ export function LoginForm() {
             render: 'Logged in.',
             type: 'success',
             isLoading: false,
+            closeOnClick: true,
+            autoClose: 3000,
+            closeButton: true,
           });
         } catch (_err) {
           throw new Error("There's no such user.");
@@ -91,6 +94,9 @@ export function LoginForm() {
           render: 'Something went wrong!',
           type: 'error',
           isLoading: false,
+          closeOnClick: true,
+          autoClose: 3000,
+          closeButton: true,
         });
         toast.error(err.message);
       })
