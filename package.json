@@ -9,7 +9,9 @@
   "license": "MIT",
   "scripts": {
     "backend:start": "nx run backend:serve",
+    "backend:start:prod": "node dist/apps/backend/main.js",
     "backend:build": "nx run backend:build",
+    "backend:build:prod": "nx run backend:build --buildLibsFromSource",
     "backend:test": "nx run backend:test",
     "backend:e2e": "nx run backend-e2e:e2e --skip-nx-cloud",
     "frontend:start": "nx run frontend:serve",
