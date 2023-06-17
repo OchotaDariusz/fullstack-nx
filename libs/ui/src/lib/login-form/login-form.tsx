@@ -59,7 +59,7 @@ export function LoginForm() {
       password: formState.password,
     };
     setIsLoading(true);
-    toast.info('Wait...');
+    const toastId = toast.loading('Wait...');
     fetchData
       .post('/api/auth/login', loginRequest)
       .then(async (response) => {
@@ -77,14 +77,22 @@ export function LoginForm() {
           );
           authDispatch(login(user.data));
           navigate('/');
-          toast.success('Logged in.');
+          toast.update(toastId, {
+            render: 'Logged in.',
+            type: 'success',
+            isLoading: false,
+          });
         } catch (_err) {
           throw new Error("There's no such user.");
         }
       })
       .catch((err) => {
+        toast.update(toastId, {
+          render: 'Something went wrong!',
+          type: 'error',
+          isLoading: false,
+        });
         toast.error(err.message);
-        toast.error('Something went wrong!');
       })
       .finally(() => {
         setIsLoading(false);

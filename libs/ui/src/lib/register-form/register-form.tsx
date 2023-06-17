@@ -58,16 +58,24 @@ export function RegisterForm() {
       password: formState.password,
     };
     setIsLoading(true);
-    toast.info('Wait...');
+    const toastId = toast.loading('Wait...');
     fetchData
       .post('/api/auth/register', registerRequest)
       .then(() => {
-        toast.success('Account created.');
+        toast.update(toastId, {
+          render: 'Account created.',
+          type: 'success',
+          isLoading: false,
+        });
         navigate('/login');
       })
       .catch((err) => {
+        toast.update(toastId, {
+          render: 'Something went wrong!',
+          type: 'error',
+          isLoading: false,
+        });
         toast.error(err.message);
-        toast.error('Something went wrong!');
       })
       .finally(() => {
         setIsLoading(false);

@@ -23,7 +23,7 @@
     "changes:test": "nx affected:test",
     "changes:e2e": "nx affected:e2e --skip-nx-cloud",
     "format": "nx format:write",
-    "predeploy": "npm run frontend:build:prod -- --prod --baseHref=/fullstack-nx/",
+    "predeploy": "npm run frontend:build:prod -- --prod --baseHref=/",
     "deploy": "gh-pages -d dist/apps/frontend"
   },
   "private": true,
