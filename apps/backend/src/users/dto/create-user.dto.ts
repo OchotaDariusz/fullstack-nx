@@ -21,10 +21,4 @@ export class CreateUserDto {
   @IsNotEmpty()
   @MinLength(8)
   password: string;
-
-  @ApiProperty({
-    description: 'User roles',
-    default: ['user'],
-  })
-  roles?: Role[];
 }
