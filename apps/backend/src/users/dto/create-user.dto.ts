@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, MinLength } from 'class-validator';
 
-import { Role } from '@fullstack/types';
-
 export class CreateUserDto {
   @ApiProperty({
     description: 'User username',
