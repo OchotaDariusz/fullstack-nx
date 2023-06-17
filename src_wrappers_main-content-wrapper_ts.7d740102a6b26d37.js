@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunk=self.webpackChunk||[]).push([["src_wrappers_main-content-wrapper_ts"],{37165:(e,a,n)=>{n.r(a),n.d(a,{default:()=>r.MainContent});var r=n(77688)}}]);
