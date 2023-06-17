@@ -26,7 +26,6 @@ export const useFetchUsers = (
   url: string,
   paginationModel: { page: number; pageSize: number }
 ) => {
-  const [error, setError] = useState<AxiosError | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [rows, setRows] = useState<User[]>([]);
   const [usersCount, setUsersCount] = useGetUsersCount();
@@ -42,7 +41,7 @@ export const useFetchUsers = (
         setRows(users);
       })
       .catch((err) => {
-        setError(err);
+        toast.error(err);
         authDispatch(logout());
       })
       .finally(() => {
@@ -50,7 +49,7 @@ export const useFetchUsers = (
       });
   }, [paginationModel, url, authDispatch]);
 
-  return { error, isLoading, usersCount, setUsersCount, rows, setRows };
+  return { isLoading, usersCount, setUsersCount, rows, setRows };
 };
 
 const fetchUserData = async (

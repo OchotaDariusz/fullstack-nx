@@ -11,6 +11,7 @@ import {
   GridRowModes,
   GridRowModesModel,
   GridRowsProp,
+  GridSortModel,
   GridToolbarContainer,
   useGridApiRef,
 } from '@mui/x-data-grid';
@@ -34,7 +35,6 @@ import { User } from '@fullstack/interfaces';
 import { Role } from '@fullstack/types';
 import Avatar from '@mui/material/Avatar';
 import { Chip } from '@mui/material';
-import { AxiosError } from 'axios';
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -73,23 +73,23 @@ export function UserTable() {
     pageSize: 5,
   });
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
+  const [sortModel, setSortModel] = useState<GridSortModel>([
+    {
+      field: 'roles',
+      sort: 'asc',
+    },
+  ]);
 
-  const { error, isLoading, usersCount, setUsersCount, rows, setRows } =
-    useFetchUsers(
-      `/api/users?page=${paginationModel.page + 1}&limit=${
-        paginationModel.pageSize
-      }`,
-      paginationModel
-    );
-  if (error && error instanceof AxiosError) {
-    toast.error(error.message);
-  }
+  const { isLoading, usersCount, setUsersCount, rows, setRows } = useFetchUsers(
+    `/api/users?page=${paginationModel.page + 1}&limit=${
+      paginationModel.pageSize
+    }`,
+    paginationModel
+  );
 
   const handlePaginationModelChange = (
     newPaginationModel: GridPaginationModel
-  ) => {
-    setPaginationModel(newPaginationModel);
-  };
+  ) => setPaginationModel(newPaginationModel);
 
   const handleCancelClick = (id: GridRowId) => () => {
     setRowModesModel({
@@ -99,9 +99,11 @@ export function UserTable() {
     setRows((prevState) => prevState);
   };
 
-  const handleEditClick = (id: GridRowId) => () => {
-    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
-  };
+  const handleEditClick = (id: GridRowId) => () =>
+    setRowModesModel({
+      ...rowModesModel,
+      [id]: { mode: GridRowModes.Edit },
+    });
 
   const handleSaveClick = (id: string) => async () => {
     const username = (
@@ -190,9 +192,11 @@ export function UserTable() {
     return updatedRow;
   };
 
-  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) =>
     setRowModesModel(newRowModesModel);
-  };
+
+  const handleSortModelChange = (newSortModel: GridSortModel) =>
+    setSortModel(newSortModel);
 
   const columns: GridColDef[] = [
     {
@@ -203,43 +207,31 @@ export function UserTable() {
       filterOperators: [],
     },
     { field: 'username', headerName: 'Username', flex: 2, editable: true },
-    { field: 'password', headerName: 'Password', flex: 3, editable: true },
+    { field: 'password', headerName: 'Password', flex: 3, editable: true, sortable: false, filterable: false },
     {
       field: 'roles',
       headerName: 'Roles',
       flex: 1,
       align: 'center',
       headerAlign: 'center',
-      // type: 'string',
-      // valueGetter: (params: GridValueGetterParams) => {
-      //   if (params.row.roles.length > 1) {
-      //     return params.row.roles.toString().replace(',', ' ');
-      //   }
-      //   return params.row.roles;
-      // },
-      sortComparator: (a: number, b: number) => a - b,
+      sortComparator: (a: string[], b: string[]) => {
+        const roleA = a.includes(Role.ADMIN) ? 'admin' : 'user';
+        const roleB = b.includes(Role.ADMIN) ? 'admin' : 'user';
+        return roleA.localeCompare(roleB);
+      },
       renderCell: (params) => {
-        if (params.row.roles.includes(Role.ADMIN)) {
-          return (
-            <Chip
-              color="error"
-              size="small"
-              avatar={<Avatar>A</Avatar>}
-              title="admin"
-              label="admin"
-            />
-          );
-        } else {
-          return (
-            <Chip
-              color="info"
-              size="small"
-              avatar={<Avatar>U</Avatar>}
-              title="user"
-              label="user"
-            />
-          );
-        }
+        const isAdmin = params.row.roles.includes(Role.ADMIN);
+        const chipColor = isAdmin ? 'error' : 'info';
+        const chipLabel = isAdmin ? 'admin' : 'user';
+        return (
+          <Chip
+            color={chipColor}
+            size="small"
+            avatar={<Avatar>{chipLabel.charAt(0).toUpperCase()}</Avatar>}
+            title={chipLabel}
+            label={chipLabel}
+          />
+        );
       },
     },
     {
@@ -302,11 +294,11 @@ export function UserTable() {
         // checkboxSelection
         disableRowSelectionOnClick
         editMode="row"
-        getDetailPanelContent={() => 'auto'}
         loading={isLoading}
         onPaginationModelChange={handlePaginationModelChange}
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
+        onSortModelChange={handleSortModelChange}
         pageSizeOptions={[5, 15, 30, +usersCount]}
         paginationModel={paginationModel}
         pagination
@@ -315,12 +307,14 @@ export function UserTable() {
         rows={rows}
         rowCount={usersCount}
         rowModesModel={rowModesModel}
+        rowSelection={false}
         slots={{
           toolbar: EditToolbar,
         }}
         slotProps={{
-          toolbar: { setRows, setRowModesModel },
+          toolbar: { setRows, setRowModesModel, showQuickFilter: true, quickFilterProps: { debounceMs: 500 } },
         }}
+        sortModel={sortModel}
       />
       <Divider />
       <div>
