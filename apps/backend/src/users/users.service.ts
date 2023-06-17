@@ -19,34 +19,20 @@ export class UsersService {
     private readonly userRepository: Repository<UserEntity>
   ) {}
 
-  private stripUserPassword(user: User): User {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...userDetails } = user;
-    return userDetails;
-  }
-
   private async saveToRepository(user: User) {
-    const savedUser = await this.userRepository.save(user);
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    return this.stripUserPassword(savedUser);
+    return await this.userRepository.save(user);
   }
 
   async getAllUsers(): Promise<User[]> {
-    const users = await this.userRepository.find();
-    return users.map((user) => {
-      return this.stripUserPassword(user);
-    });
+    return await this.userRepository.find();
   }
 
-  async getUsers(page: number): Promise<User[]> {
-    const users = await this.userRepository
+  async getUsers(page: number, limit: number): Promise<User[]> {
+    return await this.userRepository
       .createQueryBuilder('users')
-      .take(5)
-      .skip((page - 1) * 5)
+      .take(limit)
+      .skip((page - 1) * limit)
       .getMany();
-    return users.map((user) => {
-      return this.stripUserPassword(user);
-    });
   }
 
   async countAll(): Promise<number> {
@@ -66,7 +52,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException("Can't find that user.");
     }
-    return this.stripUserPassword(user);
+    return user;
   }
 
   async addNewUser(newUserDetails: User): Promise<User> {
@@ -76,36 +62,36 @@ export class UsersService {
     if (user) {
       throw new ConflictException('User already exists!');
     }
-
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(newUserDetails.password, salt);
     const newUser = { ...newUserDetails, password: hashedPassword };
     newUser.roles = [Role.USER];
-    const addedUser = await this.saveToRepository(newUser);
-    return this.stripUserPassword(addedUser);
+    return await this.saveToRepository(newUser);
   }
 
-  async updateUser(id: string, updateDetails: User): Promise<User> {
+  async updateUser(id: string, updateDetails: Partial<User>): Promise<User> {
     const userToUpdate = await this.userRepository.findOneBy({ id });
     if (!userToUpdate) {
       throw new NotFoundException("Can't find user to update.");
+    }
+
+    const { password: oldPassword } = userToUpdate;
+    if ('password' in updateDetails) {
+      const salt = await bcrypt.genSalt();
+      userToUpdate.password = await bcrypt.hash(updateDetails.password, salt);
     }
 
     if ('username' in updateDetails) {
       const user = await this.userRepository.findOneBy({
         username: updateDetails.username,
       });
-      if (user) {
+      if (user && oldPassword === userToUpdate.password) {
         throw new ConflictException('User with such username already exists!');
+      } else {
+        userToUpdate.username = updateDetails.username;
       }
-      userToUpdate.username = updateDetails.username;
     }
-    if ('password' in updateDetails) {
-      const salt = await bcrypt.genSalt();
-      userToUpdate.password = await bcrypt.hash(updateDetails.password, salt);
-    }
-    const updatedUser = await this.saveToRepository(userToUpdate);
-    return this.stripUserPassword(updatedUser);
+    return await this.saveToRepository(userToUpdate);
   }
 
   async deleteUser(id: string): Promise<DeleteResult> {

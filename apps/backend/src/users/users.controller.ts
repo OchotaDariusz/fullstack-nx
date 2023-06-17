@@ -32,11 +32,18 @@ export class UsersController {
   @Get()
   @ApiQuery({ name: 'count', required: false, type: Boolean })
   @ApiQuery({ name: 'page', required: false, type: Number })
+  @ApiQuery({ name: 'limit', required: false, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles(Role.ADMIN)
-  getAllUsers(@Query('count') count?: boolean, @Query('page') page?: number) {
+  getAllUsers(
+    @Query('count') count?: boolean,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number
+  ) {
     if (count && !page) return this.userService.countAll();
-    if (!count && page) return this.userService.getUsers(page);
+    if (!count && page && !limit) return this.userService.getUsers(+page, 5);
+    if (!count && page && limit)
+      return this.userService.getUsers(+page, +limit);
     if (!count && !page) return this.userService.getAllUsers();
     throw new BadRequestException();
   }
