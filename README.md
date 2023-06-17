@@ -12,9 +12,9 @@
 
 admin acc: `admin:123Password!`
 
-### [FRONTEND](https://ochotadariusz.github.io/fullstack-nx)
+### [FRONTEND](https://full-stack.eu.org/)
 
-### [BACKEND](https://fullstack-nx.onrender.com/docs)
+### [BACKEND](https://v1.full-stack.eu.org/docs)
 
 <br />
 <hr />
