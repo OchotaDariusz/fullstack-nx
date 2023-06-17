@@ -1,86 +1,339 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   DataGrid,
+  GridActionsCellItem,
   GridColDef,
+  GridEventListener,
   GridPaginationModel,
-  GridValueGetterParams,
+  GridRowEditStopReasons,
+  GridRowId,
+  GridRowModel,
+  GridRowModes,
+  GridRowModesModel,
+  GridRowsProp,
+  GridToolbarContainer,
+  useGridApiRef,
 } from '@mui/x-data-grid';
+import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Close';
+import { toast } from 'react-toastify';
 
-import { fetchData } from '@fullstack/data-manager';
+import {
+  addNewUser,
+  checkIfUserExists,
+  removeUser,
+  updateUser,
+  useFetchUsers,
+} from './user-table-helpers';
 import { User } from '@fullstack/interfaces';
+import { Role } from '@fullstack/types';
+import Avatar from '@mui/material/Avatar';
+import { Chip } from '@mui/material';
+import { AxiosError } from 'axios';
 
-// TODO: add breakpoints to column headers
-const columns: GridColDef[] = [
-  { field: 'id', headerName: 'ID', width: 500 },
-  { field: 'username', headerName: 'Username', width: 400 },
-  {
-    field: 'roles',
-    headerName: 'Roles',
-    width: 100,
-    valueGetter: (params: GridValueGetterParams) => params.row.roles,
-  },
-];
+interface EditToolbarProps {
+  setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
+  setRowModesModel: (
+    newModel: (oldModel: GridRowModesModel) => GridRowModesModel
+  ) => void;
+}
+
+function EditToolbar(props: EditToolbarProps) {
+  const { setRows, setRowModesModel } = props;
+
+  const handleClick = () => {
+    const id: string = crypto.randomUUID();
+    setRows((oldRows: GridRowsProp) =>
+      [...oldRows, { id, username: 'new user', roles: ['user'] }].reverse()
+    );
+    setRowModesModel((oldModel) => ({
+      ...oldModel,
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'username' },
+    }));
+  };
+
+  return (
+    <GridToolbarContainer>
+      <Button color="primary" startIcon={<AddIcon />} onClick={handleClick}>
+        Add new user
+      </Button>
+    </GridToolbarContainer>
+  );
+}
 
 export function UserTable() {
-  const [rows, setRows] = useState<User[]>([]);
-  const [paginationModel, setPaginationModel] = React.useState({
+  const apiRef = useGridApiRef();
+  const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 5,
   });
-  const [isLoading, setIsLoading] = useState(false);
+  const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
 
-  // get how many users are in db
-  const [usersCount, setUsersCount] = useState(0);
-  useEffect(() => {
-    fetchData
-      .get('/api/users/?count=true')
-      .then((response) => {
-        setUsersCount(response.data);
-      })
-      .catch((err) => console.log(err));
-  }, []);
-
-  // handle pagination side effects
-  useEffect(() => {
-    setIsLoading(true);
-    fetchData
-      .get(`/api/users?page=${paginationModel.page + 1}`)
-      // .get('/api/users')
-      .then((response) => response.data)
-      .then((users: User[]) => {
-        setRows(users);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setIsLoading(false);
-      });
-  }, [paginationModel]);
+  const { error, isLoading, usersCount, setUsersCount, rows, setRows } =
+    useFetchUsers(
+      `/api/users?page=${paginationModel.page + 1}&limit=${
+        paginationModel.pageSize
+      }`,
+      paginationModel
+    );
+  if (error && error instanceof AxiosError) {
+    toast.error(error.message);
+  }
 
   const handlePaginationModelChange = (
     newPaginationModel: GridPaginationModel
   ) => {
     setPaginationModel(newPaginationModel);
-    console.log('old');
-    console.log(paginationModel);
-    console.log('new');
-    console.log(newPaginationModel);
   };
 
+  const handleCancelClick = (id: GridRowId) => () => {
+    setRowModesModel({
+      ...rowModesModel,
+      [id]: { mode: GridRowModes.View, ignoreModifications: true },
+    });
+    setRows((prevState) => prevState);
+  };
+
+  const handleEditClick = (id: GridRowId) => () => {
+    setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
+  };
+
+  const handleSaveClick = (id: string) => async () => {
+    const username = (
+      apiRef.current.getCellElement(id, 'username')?.lastChild
+        ?.lastChild as HTMLInputElement
+    ).value;
+    const password = (
+      apiRef.current.getCellElement(id, 'password')?.lastChild
+        ?.lastChild as HTMLInputElement
+    ).value;
+    let response: [User | User[], boolean] | boolean;
+    let isSaveSucceeded: boolean;
+
+    if (await checkIfUserExists(id)) {
+      response = await updateUser(id, { username, password });
+      if (Array.isArray(response) && (response as [User, boolean])[1]) {
+        isSaveSucceeded = (response as [User, boolean])[1];
+      } else {
+        isSaveSucceeded = response as boolean;
+      }
+    } else {
+      response = await addNewUser(username);
+      if (Array.isArray(response) && (response as [User, boolean])[1]) {
+        isSaveSucceeded = (response as [User, boolean])[1];
+        setUsersCount((prevState) => prevState + 1);
+        setRows((rows) => {
+          const oldRows = [...rows];
+          oldRows[oldRows.length - 1].id = (response as User[])[0].id;
+          oldRows[oldRows.length - 1].username = (
+            response as User[]
+          )[0].username;
+          return [...oldRows];
+        });
+      } else {
+        isSaveSucceeded = response as boolean;
+      }
+    }
+    if (isSaveSucceeded) {
+      setPaginationModel({ page: 0, pageSize: paginationModel.pageSize });
+      setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
+    }
+  };
+
+  const handleRowEditStop: GridEventListener<'rowEditStop'> = (
+    params,
+    event
+  ) => {
+    if (params.reason === GridRowEditStopReasons.enterKeyDown) {
+      event.defaultMuiPrevented = true;
+      handleSaveClick(params.id as string)()
+        .then(() => {
+          setRowModesModel({
+            ...rowModesModel,
+            [params.id]: {
+              mode: GridRowModes.View,
+              ignoreModifications: false,
+            },
+          });
+        })
+        .catch((err) => toast.error(err.message));
+    } else {
+      event.defaultMuiPrevented = true;
+      setRowModesModel({
+        ...rowModesModel,
+        [params.id]: { mode: GridRowModes.View, ignoreModifications: true },
+      });
+    }
+  };
+
+  const handleDeleteClick = (id: GridRowId) => async () => {
+    if (await removeUser(id as string)) {
+      setRows(rows.filter((row) => row.id !== id));
+      setPaginationModel((prevState) => {
+        if (prevState.pageSize === usersCount) {
+          return { ...prevState, pageSize: prevState.pageSize - 1 };
+        }
+        return { ...prevState };
+      });
+      setUsersCount((prevState) => prevState - 1);
+    }
+  };
+
+  const processRowUpdate = (newRow: GridRowModel) => {
+    const updatedRow = { ...newRow };
+    setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
+    return updatedRow;
+  };
+
+  const handleRowModesModelChange = (newRowModesModel: GridRowModesModel) => {
+    setRowModesModel(newRowModesModel);
+  };
+
+  const columns: GridColDef[] = [
+    {
+      field: 'id',
+      headerName: 'ID',
+      flex: 2,
+      sortable: false,
+      filterOperators: [],
+    },
+    { field: 'username', headerName: 'Username', flex: 2, editable: true },
+    { field: 'password', headerName: 'Password', flex: 3, editable: true },
+    {
+      field: 'roles',
+      headerName: 'Roles',
+      flex: 1,
+      align: 'center',
+      headerAlign: 'center',
+      // type: 'string',
+      // valueGetter: (params: GridValueGetterParams) => {
+      //   if (params.row.roles.length > 1) {
+      //     return params.row.roles.toString().replace(',', ' ');
+      //   }
+      //   return params.row.roles;
+      // },
+      sortComparator: (a: number, b: number) => a - b,
+      renderCell: (params) => {
+        if (params.row.roles.includes(Role.ADMIN)) {
+          return (
+            <Chip
+              color="error"
+              size="small"
+              avatar={<Avatar>A</Avatar>}
+              title="admin"
+              label="admin"
+            />
+          );
+        } else {
+          return (
+            <Chip
+              color="info"
+              size="small"
+              avatar={<Avatar>U</Avatar>}
+              title="user"
+              label="user"
+            />
+          );
+        }
+      },
+    },
+    {
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
+      flex: 1,
+      cellClassName: 'actions',
+      align: 'center',
+      headerAlign: 'center',
+      getActions: ({ id }) => {
+        const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+        if (isInEditMode) {
+          return [
+            <GridActionsCellItem
+              icon={<SaveIcon />}
+              label="Save"
+              sx={{
+                color: 'primary.main',
+              }}
+              onClick={handleSaveClick(id as string)}
+            />,
+            <GridActionsCellItem
+              icon={<CancelIcon />}
+              label="Cancel"
+              className="textPrimary"
+              onClick={handleCancelClick(id)}
+              color="inherit"
+            />,
+          ];
+        }
+
+        return [
+          <GridActionsCellItem
+            icon={<EditIcon />}
+            label="Edit"
+            className="textPrimary"
+            onClick={handleEditClick(id)}
+            color="inherit"
+          />,
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            onClick={handleDeleteClick(id)}
+            color="inherit"
+          />,
+        ];
+      },
+    },
+  ];
+
   return (
-    <div style={{ height: 500, width: '100%' }}>
+    <div style={{ width: '100%' }}>
       <DataGrid
-        rows={rows}
+        autoHeight={true}
+        autoPageSize={false}
+        apiRef={apiRef}
         columns={columns}
+        // checkboxSelection
+        disableRowSelectionOnClick
+        editMode="row"
+        getDetailPanelContent={() => 'auto'}
+        loading={isLoading}
+        onPaginationModelChange={handlePaginationModelChange}
+        onRowModesModelChange={handleRowModesModelChange}
+        onRowEditStop={handleRowEditStop}
+        pageSizeOptions={[5, 15, 30, +usersCount]}
+        paginationModel={paginationModel}
         pagination
         paginationMode="server"
-        autoPageSize={false}
-        loading={isLoading}
+        processRowUpdate={processRowUpdate}
+        rows={rows}
         rowCount={usersCount}
-        checkboxSelection
-        onPaginationModelChange={handlePaginationModelChange}
-        paginationModel={paginationModel}
+        rowModesModel={rowModesModel}
+        slots={{
+          toolbar: EditToolbar,
+        }}
+        slotProps={{
+          toolbar: { setRows, setRowModesModel },
+        }}
       />
+      <Divider />
+      <div>
+        <Button variant="contained" color="primary">
+          SAVE
+        </Button>
+        <Button variant="contained" color="warning">
+          CANCEL
+        </Button>
+        <Button variant="contained" color="error">
+          REMOVE
+        </Button>
+      </div>
     </div>
   );
 }
