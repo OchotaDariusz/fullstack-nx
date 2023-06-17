@@ -22,6 +22,12 @@ import { UsersModule } from '../users/users.module';
         database: dbConstants.name,
         entities,
         synchronize: true,
+        ssl: true,
+        extra: {
+          ssl: {
+            rejectUnauthorized: false,
+          },
+        },
       }),
     }),
     AuthModule,
