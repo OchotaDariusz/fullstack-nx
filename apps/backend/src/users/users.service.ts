@@ -1,10 +1,11 @@
 import {
   ConflictException,
+  ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
 import { Role } from '@fullstack/types';
@@ -107,11 +108,14 @@ export class UsersService {
     return this.stripUserPassword(updatedUser);
   }
 
-  async deleteUser(id: string): Promise<void> {
+  async deleteUser(id: string): Promise<DeleteResult> {
     const user = await this.userRepository.findOneBy({ id });
     if (!user) {
       throw new NotFoundException("Can't find user to delete.");
     }
-    await this.userRepository.delete(id);
+    if (user.roles.includes(Role.ADMIN)) {
+      throw new ForbiddenException('Admin account cannot be deleted');
+    }
+    return await this.userRepository.delete(id);
   }
 }
