@@ -10,6 +10,8 @@
 
 ## Demo
 
+admin acc: `admin:123Password!`
+
 ### [FRONTEND](https://ochotadariusz.github.io/fullstack-nx)
 
 ### [BACKEND](https://fullstack-nx.onrender.com/docs)
