@@ -6,7 +6,7 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: ./
     build:
-     dockerfile: ./Dockerfile
+     dockerfile: Dockerfile
 
   - type: web
     name: backend
