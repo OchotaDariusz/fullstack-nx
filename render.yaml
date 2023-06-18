@@ -1,0 +1,53 @@
+name: fullstack
+
+services:
+  - name: backend
+    type: service
+    plan: free
+    env:
+      - key: NODE_ENV
+        value: development
+      - key: NX_DB_URL
+        value: postgresql://${NX_DB_USER}:${NX_DB_PASSWORD}@db:${NX_DB_PORT}/${NX_DB_NAME}?sslmode=disable
+      - key: NX_FRONTEND_HOST
+        value: frontend
+      - key: NX_JWT_SECRET
+        value: ${NX_JWT_SECRET}
+      - key: PORT
+        value: '3000'
+    build:
+      dockerfile: ./apps/backend/Dockerfile
+    routes:
+      - src: /
+        dest: backend:3000
+
+  - name: db
+    type: service
+    plan: free
+    env:
+      - key: POSTGRES_DB
+        value: ${POSTGRES_DB}
+      - key: POSTGRES_PASSWORD
+        value: ${POSTGRES_PASSWORD}
+      - key: POSTGRES_USER
+        value: ${POSTGRES_USER}
+    image: postgres:13.9-alpine
+    ports:
+      - port: 5432
+        protocol: tcp
+
+  - name: frontend
+    type: service
+    plan: free
+    env:
+      - key: NODE_ENV
+        value: development
+      - key: NX_BACKEND_HOST
+        value: backend
+      - key: PORT
+        value: '4200'
+    build:
+      dockerfile: ./apps/frontend/Dockerfile
+    routes:
+      - src: /
+        dest: frontend:80
