@@ -1,4 +1,4 @@
-FROM fullstack-nx:nx-base AS builder
+FROM deadjim/fullstack-nx:nx-base AS builder
 
 ARG NODE_ENV
 ARG BUILD_FLAG
@@ -6,7 +6,7 @@ WORKDIR /app/builder
 COPY . .
 RUN npx nx build backend ${BUILD_FLAG}
 
-FROM fullstack-nx:nx-base
+FROM deadjim/fullstack-nx:nx-base
 
 WORKDIR /app
 COPY --from=builder /app/builder ./

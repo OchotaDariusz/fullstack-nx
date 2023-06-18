@@ -1,4 +1,4 @@
-FROM fullstack-nx:nx-base AS builder
+FROM deadjim/fullstack-nx:nx-base AS builder
 
 ARG NODE_ENV
 ARG BUILD_FLAG
