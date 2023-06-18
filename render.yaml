@@ -42,9 +42,14 @@ services:
 
 databases:
   - name: db
-    databaseName: ${NX_DB_NAME}
-    user: ${NX_DB_USER}
+    databaseName: NX_DB_NAME
+    user: NX_DB_USER
     plan: free
+    envVars:
+      - key: NX_DB_NAME
+        value: ${NX_DB_USER}
+      - key: NX_DB_USER
+        value: ${NX_DB_NAME}
     ipAllowList:
       - source: 0.0.0.0/0
         description: everywhere
