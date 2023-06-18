@@ -1,5 +1,3 @@
-name: fullstack
-
 services:
   - type: web
     name: base
