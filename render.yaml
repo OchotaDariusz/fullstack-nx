@@ -42,7 +42,7 @@ services:
 
 databases:
   - name: db
-    databaseName: compose-postgres
+    databaseName: composepostgres
     user: your_postgres_username
     plan: free
     ipAllowList:
