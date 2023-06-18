@@ -5,8 +5,6 @@ services:
     runtime: docker
     dockerfilePath: ./Dockerfile
     dockerContext: ./
-    build:
-     dockerfile: Dockerfile
 
   - type: web
     name: backend
@@ -27,14 +25,6 @@ services:
         value: '3000'
       - key: NX_FRONTEND_HOST
         value: ${NX_FRONTEND_HOST}
-    build:
-      dockerfile: ./apps/backend/Dockerfile
-    routes:
-      - src: /
-        dest: backend:3000
-    ipAllowList:
-      - source: 0.0.0.0/0
-        description: everywhere
 
   - type: web
     name: frontend
@@ -43,16 +33,12 @@ services:
     dockerfilePath: ./apps/frontend/Dockerfile
     dockerContext: ./
     env:
-      - key: NODE_ENV
-        value: development
       - key: NX_BACKEND_HOST
         value: backend
       - key: PORT
         value: '4200'
       - key: NX_BACKEND_HOST
         value: ${NX_BACKEND_HOST}
-    build:
-      dockerfile: ./apps/frontend/Dockerfile
     routes:
       - src: /
         dest: frontend:80
@@ -63,21 +49,8 @@ services:
 databases:
   - name: db
     databaseName: ${NX_DB_NAME}
-    database: ${NX_DB_NAME}
     user: ${NX_DB_USER}
     plan: free
-    password: ${NX_DB_PASSWORD}
-    env:
-      - key: POSTGRES_DB
-        value: ${NX_DB_NAME}
-      - key: POSTGRES_PASSWORD
-        value: ${NX_DB_PASSWORD}
-      - key: POSTGRES_USER
-        value: ${NX_DB_USER}
-    image: postgres:13.9-alpine
-    ports:
-      - port: 5432
-        protocol: tcp
     ipAllowList:
       - source: 0.0.0.0/0
         description: everywhere
