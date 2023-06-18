@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
 import { dbConstants } from '@fullstack/constants';
 import { AppController } from './app.controller';
@@ -14,14 +15,11 @@ import { TerminusLoggerService } from '../health/terminus-logger.service';
 
 @Module({
   imports: [
+    ConfigModule.forRoot(),
     TypeOrmModule.forRootAsync({
-      useFactory: () => ({
+      useFactory: (): TypeOrmModuleOptions => ({
         type: 'postgres',
-        host: dbConstants.host,
-        port: +dbConstants.port,
-        username: dbConstants.user,
-        password: dbConstants.password,
-        database: dbConstants.name,
+        url: dbConstants.url,
         entities,
         autoLoadEntities: true,
         synchronize: true,

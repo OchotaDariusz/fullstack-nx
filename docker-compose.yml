@@ -1,0 +1,87 @@
+name: fullstack
+
+networks:
+  tsqn:
+    driver: bridge
+
+services:
+  #  NESTJS  #
+  backend:
+    build:
+      context: ./
+      dockerfile: ./apps/backend/Dockerfile
+      args:
+        BUILD_FLAG: null
+        NODE_ENV: development
+      cache_from:
+        - deadjim/fullstack-nx:nx-base
+    container_name: backend
+    depends_on:
+      db:
+        condition: service_started
+    environment:
+      NODE_ENV: development
+      NX_DB_URL: postgresql://${NX_DB_USER}:${NX_DB_PASSWORD}@db:${NX_DB_PORT}/${NX_DB_NAME}?sslmode=disable
+      NX_FRONTEND_HOST: frontend
+      NX_JWT_SECRET: ${NX_JWT_SECRET}
+      PORT: '3000'
+    image: deadjim/fullstack-nx:backend-dev
+    ports:
+      - mode: ingress
+        target: 3000
+        published: '3000'
+        protocol: tcp
+    networks:
+      - tsqn
+    restart: on-failure
+
+  #  POSTGRESQL  #
+  db:
+    container_name: db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+    image: postgres:13.9-alpine
+    ports:
+      - mode: ingress
+        target: 5432
+        published: '5432'
+        protocol: tcp
+    networks:
+      - tsqn
+    restart: on-failure
+    volumes:
+      - type: volume
+        source: postgres_data
+        target: /var/lib/postgresql/data
+        volume: {}
+
+  #  REACT  #
+  frontend:
+    build:
+      context: ./
+      dockerfile: ./apps/frontend/Dockerfile
+      args:
+        BUILD_FLAG: null
+        NODE_ENV: development
+      cache_from:
+        - nginx:1.19.2
+    container_name: frontend
+    environment:
+      NODE_ENV: development
+      NX_BACKEND_HOST: backend
+      PORT: '4200'
+    image: deadjim/fullstack-nx:frontend-dev
+    ports:
+      - mode: ingress
+        target: 80
+        published: '4200'
+        protocol: tcp
+    networks:
+      - tsqn
+    restart: on-failure
+
+volumes:
+  postgres_data:
+    name: fullstack_postgres_data

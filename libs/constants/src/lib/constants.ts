@@ -4,6 +4,7 @@ export const dbConstants = {
   user: process.env['NX_DB_USER'],
   password: process.env['NX_DB_PASSWORD'],
   name: process.env['NX_DB_NAME'],
+  url: process.env['NX_DB_URL'],
 };
 
 export const jwtConstants = {

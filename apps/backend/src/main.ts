@@ -47,7 +47,7 @@ async function bootstrap() {
     })
     .setTitle('NestJS Backend')
     .setDescription('REST API')
-    .setVersion('1.0')
+    .setVersion('2.0')
     .build();
   const options: SwaggerDocumentOptions = {
     operationIdFactory: (controllerKey: string, methodKey: string) => methodKey,
@@ -55,7 +55,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config, options);
   SwaggerModule.setup('docs', app, document);
 
-  const port = process.env.PORT || 3000;
+  const port = +process.env.PORT || 3000;
   await app.listen(port);
 
   Logger.log(
