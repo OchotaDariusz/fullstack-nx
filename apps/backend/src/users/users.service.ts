@@ -104,4 +104,13 @@ export class UsersService {
     }
     return await this.userRepository.delete(id);
   }
+
+  async promoteToAdmin(id: string): Promise<User> {
+    const user = await this.userRepository.findOneBy({ id });
+    if (!user) {
+      throw new NotFoundException("Can't find user to promote.");
+    }
+    user.roles.push(Role.ADMIN);
+    return await this.userRepository.save(user);
+  }
 }
