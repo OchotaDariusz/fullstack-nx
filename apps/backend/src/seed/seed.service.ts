@@ -28,7 +28,7 @@ export class SeedService {
     let counter = 0;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for await (const _user of this.userGenerator()) {
-      if (counter === 60) break;
+      if (counter === 60) break;  // will generate 60 users + 1 admin
       counter++;
     }
   }
