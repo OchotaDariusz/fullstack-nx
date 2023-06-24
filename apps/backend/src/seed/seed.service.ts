@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import crypto from 'crypto';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -7,9 +8,7 @@ export class SeedService {
 
   private async createUser() {
     return await this.usersService.addNewUser({
-      username: `user_${Math.floor(
-        Math.random() * parseInt(new Date().toISOString())
-      )}`,
+      username: `user_${crypto.randomUUID()}`,
       password: '123Password!',
     });
   }
@@ -23,12 +22,11 @@ export class SeedService {
     }
   }
 
-  public async seed() {
-    // const userGenerator = this.userGenerator();
+  public async seed(amount = 60) {
     let counter = 0;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     for await (const _user of this.userGenerator()) {
-      if (counter === 60) break;  // will generate 60 users + 1 admin
+      if (counter === amount) break; // will generate 60 users + 1 admin
       counter++;
     }
   }

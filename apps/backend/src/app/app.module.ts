@@ -10,6 +10,7 @@ import { AuthModule } from '../auth/auth.module';
 import entities from '../entities';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { UsersModule } from '../users/users.module';
+import { SeedModule } from "../seed/seed.module";
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { UsersModule } from '../users/users.module';
     }),
     AuthModule,
     UsersModule,
+    SeedModule
   ],
   controllers: [AppController],
   providers: [

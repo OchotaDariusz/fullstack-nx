@@ -1,9 +1,4 @@
 export const dbConstants = {
-  host: process.env['NX_DB_HOST'],
-  port: process.env['NX_DB_PORT'],
-  user: process.env['NX_DB_USER'],
-  password: process.env['NX_DB_PASSWORD'],
-  name: process.env['NX_DB_NAME'],
   url: process.env['NX_DB_URL'],
 };
 
@@ -14,7 +9,6 @@ export const jwtConstants = {
 export const serverConstants = {
   frontendHost: process.env['NX_FRONTEND_HOST'],
   backendHost: process.env['NX_BACKEND_HOST'],
-  env: process.env['NX_NODE_ENV'],
 };
 
 export const ROLES_KEY = 'roles';

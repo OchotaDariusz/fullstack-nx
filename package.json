@@ -1,6 +1,6 @@
 {
   "name": "fullstack-nx",
-  "version": "2.1.0",
+  "version": "2.2.1",
   "homepage": "https://full-stack.eu.org/",
   "repository": {
     "type": "git",
@@ -14,18 +14,25 @@
     "backend:build:prod": "nx run backend:build --buildLibsFromSource",
     "backend:test": "nx run backend:test",
     "backend:e2e": "nx run backend-e2e:e2e --skip-nx-cloud",
+    "backend:lint": "nx run backend:lint",
     "frontend:start": "nx run frontend:serve",
     "frontend:build": "nx run frontend:build",
     "frontend:build:prod": "nx build frontend --buildLibsFromSource",
     "frontend:test": "nx run frontend:test",
-    "frotnend:e2e": "nx run frotnend-e2e:e2e --skip-nx-cloud",
+    "frontend:e2e": "nx run frontend-e2e:e2e --skip-nx-cloud",
+    "frontend:lint": "nx run frontend:lint",
     "changes:graph": "nx affected:graph",
     "changes:test": "nx affected:test",
     "changes:e2e": "nx affected:e2e --skip-nx-cloud",
     "format": "nx format:write",
     "predeploy": "npm run frontend:build:prod -- --prod --baseHref=/",
     "deploy": "gh-pages -d dist/apps/frontend",
-    "seed": "ts-node apps/backend/src/seed/seed.ts"
+    "constants:lint": "nx run constants:lint",
+    "data-manager:lint": "nx run data-manager:lint",
+    "interfaces:lint": "nx run interfaces:lint",
+    "reducers:lint": "nx run reducers:lint",
+    "types:lint": "nx run types:lint",
+    "ui:lint": "nx run ui:lint"
   },
   "private": true,
   "dependencies": {
