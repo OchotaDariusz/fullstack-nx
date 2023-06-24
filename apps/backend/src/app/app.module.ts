@@ -10,7 +10,7 @@ import { AuthModule } from '../auth/auth.module';
 import entities from '../entities';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { UsersModule } from '../users/users.module';
-import { SeedModule } from "../seed/seed.module";
+import { SeedModule } from '../seed/seed.module';
 
 @Module({
   imports: [
@@ -32,7 +32,7 @@ import { SeedModule } from "../seed/seed.module";
     }),
     AuthModule,
     UsersModule,
-    SeedModule
+    SeedModule,
   ],
   controllers: [AppController],
   providers: [
